@@ -28,272 +28,273 @@
       min-height: 100vh;
     }
 
-    /* ── HERO ── */
+    /* HERO */
     .hero {
+      background: linear-gradient(160deg, #0e0e14 0%, #1a0a2e 50%, #0e0e14 100%);
+      padding: 4rem 1.5rem 3rem;
       text-align: center;
-      padding: 5rem 1.5rem 4rem;
-      position: relative;
-      overflow: hidden;
+      border-bottom: 1px solid var(--border);
     }
 
-    .hero::before {
-      content: "";
-      position: absolute;
-      top: -120px; left: 50%;
-      transform: translateX(-50%);
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero .tag {
+    .hero-badge {
       display: inline-block;
       background: #2d1f4a;
+      border: 1px solid var(--accent);
       color: var(--accent2);
       font-size: 0.75rem;
       font-weight: 700;
-      text-transform: uppercase;
       letter-spacing: 0.1em;
+      text-transform: uppercase;
       padding: 0.3rem 1rem;
       border-radius: 99px;
-      border: 1px solid var(--accent);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
     }
 
     .hero h1 {
       font-size: clamp(2rem, 5vw, 3.2rem);
-      line-height: 1.15;
-      margin-bottom: 1rem;
-    }
-
-    .hero h1 span {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      font-weight: 900;
+      background: linear-gradient(135deg, #fff 30%, var(--accent2));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+      line-height: 1.1;
     }
 
     .hero p {
       color: var(--muted);
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       max-width: 520px;
-      margin: 0 auto 2.5rem;
-      line-height: 1.7;
+      margin: 0 auto 2rem;
+      line-height: 1.6;
     }
 
     .hero-cta {
-      display: inline-flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .btn-primary {
+      display: inline-block;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
       color: #fff;
-      padding: 0.85rem 2rem;
-      border-radius: 10px;
-      text-decoration: none;
       font-weight: 700;
       font-size: 1rem;
-      transition: opacity 0.2s;
-    }
-    .btn-primary:hover { opacity: 0.85; }
-
-    .btn-secondary {
-      background: var(--surface);
-      color: var(--text);
       padding: 0.85rem 2rem;
       border-radius: 10px;
       text-decoration: none;
-      font-weight: 600;
-      font-size: 1rem;
-      border: 1px solid var(--border);
-      transition: border-color 0.2s;
+      transition: opacity 0.2s;
     }
-    .btn-secondary:hover { border-color: var(--accent2); }
+    .hero-cta:hover { opacity: 0.85; }
 
-    /* ── SEÇÕES PRINCIPAIS ── */
-    .sections {
-      max-width: 1100px;
+    /* SEÇÕES */
+    .section-wrap {
+      max-width: 960px;
       margin: 0 auto;
-      padding: 0 1.5rem 5rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
+      padding: 3rem 1.5rem;
     }
 
-    .section-card {
+    .section-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent2);
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+
+    .section-heading {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-desc {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.75rem;
+    }
+
+    /* GRID PRINCIPAL */
+    .main-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 3rem;
+    }
+
+    .card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 2rem;
+      padding: 1.5rem;
       text-decoration: none;
       color: var(--text);
       transition: all 0.25s;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.75rem;
       position: relative;
       overflow: hidden;
     }
 
-    .section-card::after {
+    .card::before {
       content: "";
       position: absolute;
-      bottom: 0; left: 0; right: 0;
+      top: 0; left: 0; right: 0;
       height: 3px;
-      opacity: 0;
-      transition: opacity 0.25s;
+      background: var(--card-color, var(--accent));
+      border-radius: 16px 16px 0 0;
     }
 
-    .section-card:hover {
-      border-color: var(--accent);
+    .card:hover {
+      border-color: var(--card-color, var(--accent));
       transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
     }
 
-    .section-card:hover::after { opacity: 1; }
+    .card-icon { font-size: 2rem; }
 
-    .card-icon {
-      font-size: 2.2rem;
-      line-height: 1;
-    }
-
-    .card-label {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--accent2);
+    .card-title {
+      font-size: 1.1rem;
       font-weight: 700;
     }
 
-    .section-card h2 {
-      font-size: 1.3rem;
-      line-height: 1.3;
-    }
-
-    .section-card p {
+    .card-desc {
+      font-size: 0.85rem;
       color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.6;
+      line-height: 1.5;
       flex: 1;
     }
 
-    .card-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      margin-top: 0.25rem;
-    }
-
-    .tag-pill {
-      background: var(--surface2);
-      color: var(--muted);
-      font-size: 0.72rem;
+    .card-tag {
+      display: inline-block;
       padding: 0.2rem 0.65rem;
       border-radius: 99px;
-      border: 1px solid var(--border);
-    }
-
-    .card-arrow {
-      font-size: 0.85rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: #2d1f4a;
       color: var(--accent2);
-      font-weight: 600;
-      margin-top: auto;
+      align-self: flex-start;
     }
 
-    /* ── TRILHA SUGERIDA ── */
-    .trilha-section {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 0 1.5rem 5rem;
+    .card-tag.green  { background: #14532d; color: var(--green); }
+    .card-tag.yellow { background: #713f12; color: var(--yellow); }
+    .card-tag.cyan   { background: #164e63; color: var(--cyan); }
+    .card-tag.soon   { background: var(--surface2); color: var(--muted); }
+
+    .card.disabled {
+      opacity: 0.5;
+      pointer-events: none;
     }
 
-    .trilha-section h2 {
-      font-size: 1.3rem;
-      margin-bottom: 0.5rem;
+    /* FERRAMENTAS */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 3rem;
     }
 
-    .trilha-section .sub {
-      color: var(--muted);
-      font-size: 0.9rem;
-      margin-bottom: 2rem;
+    .tool-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
     }
 
-    .trilha {
+    .tool-card:hover {
+      border-color: var(--accent2);
+      transform: translateY(-2px);
+    }
+
+    .tool-icon { font-size: 1.6rem; }
+    .tool-name { font-weight: 700; font-size: 0.95rem; }
+    .tool-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
+
+    /* TRILHA */
+    .trail {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .trail h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+    }
+
+    .trail-steps {
       display: flex;
       flex-direction: column;
       gap: 0;
     }
 
-    .trilha-step {
+    .trail-step {
       display: flex;
-      gap: 1.25rem;
+      gap: 1rem;
       align-items: flex-start;
+      padding-bottom: 1.25rem;
       position: relative;
     }
 
-    .trilha-step:not(:last-child)::before {
+    .trail-step:not(:last-child)::after {
       content: "";
       position: absolute;
-      left: 19px;
-      top: 40px;
-      bottom: -12px;
+      left: 15px;
+      top: 32px;
+      bottom: 0;
       width: 2px;
       background: var(--border);
     }
 
-    .trilha-dot {
-      width: 40px;
-      height: 40px;
+    .step-num {
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1rem;
+      font-weight: 800;
+      font-size: 0.85rem;
       flex-shrink: 0;
       position: relative;
       z-index: 1;
-      border: 2px solid var(--border);
-      background: var(--surface);
     }
 
-    .trilha-body {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1rem 1.25rem;
-      margin-bottom: 1.25rem;
-      flex: 1;
-    }
+    .step-body { flex: 1; }
+    .step-title { font-weight: 700; margin-bottom: 0.25rem; }
+    .step-text  { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
 
-    .trilha-body .t-title {
-      font-weight: 700;
-      font-size: 0.95rem;
-      margin-bottom: 0.3rem;
-    }
-
-    .trilha-body .t-desc {
-      color: var(--muted);
-      font-size: 0.85rem;
-    }
-
-    .trilha-body .t-link {
+    .step-link {
       display: inline-block;
       margin-top: 0.5rem;
-      color: var(--accent2);
       font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--accent2);
       text-decoration: none;
-      font-weight: 600;
+    }
+    .step-link:hover { text-decoration: underline; }
+
+    /* DIVISOR */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0 0 3rem;
     }
 
-    .trilha-body .t-link:hover { text-decoration: underline; }
-
-    /* ── RODAPÉ ── */
+    /* FOOTER */
     footer {
       text-align: center;
       padding: 2rem 1rem;
       color: var(--muted);
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       border-top: 1px solid var(--border);
     }
 
@@ -303,115 +304,136 @@
 </head>
 <body>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="tag">🎧 DJ Toolkit</div>
-    <h1>Tudo que você precisa<br><span>para começar a tocar</span></h1>
-    <p>Teoria, setup e prática num só lugar. Do zero ao primeiro set — sem enrolação.</p>
-    <div class="hero-cta">
-      <a href="dj/setups/" class="btn-primary">Monte seu Setup →</a>
-      <a href="dj/estudos/" class="btn-secondary">Ir para os Estudos</a>
-    </div>
-  </section>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">🎧 DJ Toolkit</div>
+  <h1>Do zero ao set.<br>Com teoria e prática.</h1>
+  <p>Um hub educacional gratuito para DJs iniciantes. Teoria aplicada, ferramentas interativas e recomendações de setup — tudo num lugar só.</p>
+  <a href="dj/setups/" class="hero-cta">→ Monte seu setup personalizado</a>
+</div>
 
-  <!-- CARDS DE SEÇÃO -->
-  <div class="sections">
+<div class="section-wrap">
 
-    <a href="dj/setups/" class="section-card">
-      <div class="card-icon">🛠</div>
-      <div class="card-label">Questionário Interativo</div>
-      <h2>Monte seu Setup</h2>
-      <p>Responda 5 perguntas e receba uma recomendação personalizada de software, pools de música e equipamento.</p>
-      <div class="card-tags">
-        <span class="tag-pill">Software</span>
-        <span class="tag-pill">Hardware</span>
-        <span class="tag-pill">Pools</span>
-        <span class="tag-pill">Orçamento</span>
-      </div>
-      <div class="card-arrow">Acessar →</div>
-    </a>
+  <!-- SEÇÕES PRINCIPAIS -->
+  <div class="section-title">Conteúdo</div>
+  <div class="section-heading">Por onde começar</div>
+  <p class="section-desc">Escolha uma área ou siga a trilha recomendada logo abaixo.</p>
 
-    <a href="dj/estudos/" class="section-card">
+  <div class="main-grid">
+    <a href="dj/estudos/" class="card" style="--card-color: var(--accent2);">
       <div class="card-icon">📚</div>
-      <div class="card-label">Teoria Aplicada</div>
-      <h2>Estudos</h2>
-      <p>BPM, harmonia, Roda de Cavendish, estrutura de música eletrônica, leitura de pista e erros comuns. O porquê antes do como.</p>
-      <div class="card-tags">
-        <span class="tag-pill">BPM</span>
-        <span class="tag-pill">Harmonia</span>
-        <span class="tag-pill">Mixagem</span>
-        <span class="tag-pill">Pista</span>
-      </div>
-      <div class="card-arrow">Acessar →</div>
+      <div class="card-title">Teoria Aplicada ao DJ</div>
+      <div class="card-desc">BPM, harmonia, Roda de Cavendish, estrutura de músicas, mixagem e leitura de pista.</div>
+      <span class="card-tag green">Disponível</span>
     </a>
 
-    <div class="section-card" style="opacity:0.5; cursor:default;">
+    <a href="dj/setups/" class="card" style="--card-color: var(--yellow);">
+      <div class="card-icon">🎛️</div>
+      <div class="card-title">Monte seu Setup</div>
+      <div class="card-desc">Questionário de 5 perguntas que gera uma recomendação personalizada de software, hardware e serviços.</div>
+      <span class="card-tag yellow">Disponível</span>
+    </a>
+
+    <div class="card disabled" style="--card-color: var(--cyan);">
       <div class="card-icon">🎬</div>
-      <div class="card-label">Em breve</div>
-      <h2>Tutoriais Práticos</h2>
-      <p>Passo a passo no VirtualDJ e Serato: beatmatch manual, swap de graves, loops e efeitos. Vídeos e guias escritos.</p>
-      <div class="card-tags">
-        <span class="tag-pill">VirtualDJ</span>
-        <span class="tag-pill">Serato</span>
-        <span class="tag-pill">Técnica</span>
-      </div>
-      <div class="card-arrow" style="color:var(--muted);">Em construção</div>
+      <div class="card-title">Tutoriais Práticos</div>
+      <div class="card-desc">Passo a passo: primeiro setup no VirtualDJ, como fazer beatmatch, transições e organizar sua biblioteca.</div>
+      <span class="card-tag soon">Em breve</span>
     </div>
 
-    <div class="section-card" style="opacity:0.5; cursor:default;">
-      <div class="card-icon">🎵</div>
-      <div class="card-label">Em breve</div>
-      <h2>Biblioteca de Referências</h2>
-      <p>Faixas essenciais por gênero com BPM e tonalidade anotados. Deep House, Afro House e Eletrônico Comercial.</p>
-      <div class="card-tags">
-        <span class="tag-pill">Deep House</span>
-        <span class="tag-pill">Afro House</span>
-        <span class="tag-pill">Referências</span>
-      </div>
-      <div class="card-arrow" style="color:var(--muted);">Em construção</div>
-    </div>
-
-  </div>
-
-  <!-- TRILHA SUGERIDA -->
-  <div class="trilha-section">
-    <h2>📍 Por onde começar?</h2>
-    <p class="sub">Se você está chegando agora, siga essa ordem.</p>
-
-    <div class="trilha">
-
-      <div class="trilha-step">
-        <div class="trilha-dot">1</div>
-        <div class="trilha-body">
-          <div class="t-title">Entenda o porquê antes de comprar qualquer coisa</div>
-          <div class="t-desc">Leia os módulos de BPM, Harmonia e Estrutura de Música. Leva menos de 30 minutos e muda como você ouve tudo.</div>
-          <a href="dj/estudos/" class="t-link">Ir para Estudos →</a>
-        </div>
-      </div>
-
-      <div class="trilha-step">
-        <div class="trilha-dot">2</div>
-        <div class="trilha-body">
-          <div class="t-title">Monte seu setup com base no seu perfil</div>
-          <div class="t-desc">Responda o questionário e descubra qual software, pool e controladora fazem sentido para o seu objetivo e orçamento.</div>
-          <a href="dj/setups/" class="t-link">Fazer o questionário →</a>
-        </div>
-      </div>
-
-      <div class="trilha-step">
-        <div class="trilha-dot">3</div>
-        <div class="trilha-body">
-          <div class="t-title">Pratique as transições antes do evento</div>
-          <div class="t-desc">Monte uma playlist de 20 músicas, anote o BPM e o código Camelot de cada uma, e treine as transições em sequência. Tutoriais práticos chegam em breve.</div>
-        </div>
-      </div>
-
+    <div class="card disabled" style="--card-color: var(--green);">
+      <div class="card-icon">🗂️</div>
+      <div class="card-title">Biblioteca de Referências</div>
+      <div class="card-desc">Faixas essenciais de Deep House, Afro House e Eletrônico Comercial com BPM e código Camelot.</div>
+      <span class="card-tag soon">Em breve</span>
     </div>
   </div>
 
-  <footer>
-    DJ Toolkit · Feito para quem está começando · <a href="https://github.com/concego/dj-toolkit" target="_blank">GitHub</a>
-  </footer>
+  <hr class="divider" />
+
+  <!-- FERRAMENTAS -->
+  <div class="section-title">Ferramentas</div>
+  <div class="section-heading">Use agora, sem cadastro</div>
+  <p class="section-desc">Ferramentas interativas que rodam direto no navegador.</p>
+
+  <div class="tools-grid">
+    <a href="dj/ferramentas/bpm/" class="tool-card">
+      <div class="tool-icon">⏱</div>
+      <div class="tool-name">Calculadora de BPM</div>
+      <div class="tool-desc">Calcula zonas de transição seguras. Tem tap BPM e referências por gênero.</div>
+    </a>
+
+    <a href="dj/ferramentas/camelot/" class="tool-card">
+      <div class="tool-icon">🔵</div>
+      <div class="tool-name">Tabela Camelot</div>
+      <div class="tool-desc">Roda Camelot interativa. Clique num tom e veja quais são harmonicamente compatíveis.</div>
+    </a>
+
+    <a href="dj/ferramentas/setlist/" class="tool-card">
+      <div class="tool-icon">📋</div>
+      <div class="tool-name">Montador de Setlist</div>
+      <div class="tool-desc">Monte sua playlist com análise de transições de BPM, harmonia e curva de energia.</div>
+    </a>
+
+    <a href="dj/ferramentas/cronometro/" class="tool-card">
+      <div class="tool-icon">🕐</div>
+      <div class="tool-name">Cronômetro de Set</div>
+      <div class="tool-desc">Divide o set em fases (abertura, pico, fechamento) com alertas automáticos de tempo.</div>
+    </a>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- TRILHA -->
+  <div class="trail">
+    <h2>🗺️ Trilha recomendada para iniciantes</h2>
+    <div class="trail-steps">
+
+      <div class="trail-step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Entenda a teoria antes de comprar</div>
+          <div class="step-text">Leia os módulos de BPM, harmonia e estrutura de música. São 20 minutos que vão mudar como você ouve qualquer faixa.</div>
+          <a href="dj/estudos/" class="step-link">→ Ir para Teoria Aplicada</a>
+        </div>
+      </div>
+
+      <div class="trail-step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Monte seu setup ideal</div>
+          <div class="step-text">Responda o questionário de 5 perguntas e receba uma recomendação de software, hardware e serviços baseada no seu perfil e orçamento.</div>
+          <a href="dj/setups/" class="step-link">→ Ir para Monte seu Setup</a>
+        </div>
+      </div>
+
+      <div class="trail-step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Use as ferramentas no seu treino</div>
+          <div class="step-text">Monte uma playlist de 10 músicas no Montador de Setlist, verifique as compatibilidades na Tabela Camelot e use o Cronômetro para simular um set real.</div>
+          <a href="dj/ferramentas/setlist/" class="step-link">→ Ir para Montador de Setlist</a>
+        </div>
+      </div>
+
+      <div class="trail-step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Pratique com estrutura</div>
+          <div class="step-text">Configure o Cronômetro com a duração do seu evento. Defina as fases, ligue os alertas e treine como se fosse dia de gig.</div>
+          <a href="dj/ferramentas/cronometro/" class="step-link">→ Ir para Cronômetro de Set</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  DJ Toolkit · Feito para quem está começando ·
+  <a href="https://github.com/concego/dj-toolkit" target="_blank">GitHub</a>
+</footer>
 
 </body>
 </html>
