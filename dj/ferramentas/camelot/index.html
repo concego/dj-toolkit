@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DJ Toolkit — Tabela Camelot</title>
+  <style>
+    :root {
+      --bg: #0e0e14;
+      --surface: #1a1a26;
+      --surface2: #22223a;
+      --accent: #7c3aed;
+      --accent2: #a855f7;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: #2d2d42;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    header .back {
+      display: inline-block;
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-decoration: none;
+      margin-bottom: 1rem;
+    }
+    header .back:hover { color: var(--accent2); }
+
+    header h1 {
+      font-size: 1.9rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.4rem;
+    }
+
+    header p { color: var(--muted); font-size: 0.95rem; }
+
+    .container { max-width: 860px; margin: 0 auto; }
+
+    /* ── INSTRUÇÃO ── */
+    .tip {
+      background: #1c1c30;
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 0.85rem 1rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 1.75rem;
+    }
+    .tip strong { color: var(--text); }
+
+    /* ── RODA ── */
+    .wheel-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .wheel {
+      position: relative;
+      width: 340px;
+      height: 340px;
+    }
+
+    .wheel svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .slice {
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .slice:hover { opacity: 0.85; }
+    .slice.selected { stroke: #fff; stroke-width: 3; }
+    .slice.compatible { stroke: #fff; stroke-width: 2; stroke-dasharray: 4 2; }
+    .slice.dimmed { opacity: 0.2; }
+
+    /* ── PAINEL DE RESULTADO ── */
+    .result-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      min-height: 80px;
+    }
+
+    .result-panel h2 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent2);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    #result-content {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .selected-key {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .key-badge {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800;
+      font-size: 1rem;
+      flex-shrink: 0;
+      border: 3px solid rgba(255,255,255,0.3);
+    }
+
+    .key-info h3 { font-size: 1.1rem; margin-bottom: 0.2rem; }
+    .key-info p  { font-size: 0.82rem; color: var(--muted); }
+
+    .compat-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.75rem;
+    }
+
+    .compat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.85rem;
+    }
+
+    .compat-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .compat-code { font-weight: 700; }
+    .compat-note { color: var(--muted); font-size: 0.75rem; }
+
+    /* ── TABELA COMPLETA ── */
+    .table-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+    }
+
+    .table-card h2 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent2);
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    tr:hover td { background: var(--surface2); }
+
+    .code-cell {
+      font-weight: 800;
+      font-size: 1rem;
+    }
+
+    .color-dot {
+      display: inline-block;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    .compat-codes { color: var(--accent2); font-weight: 600; }
+
+    /* ── NAV ── */
+    .bottom-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+      gap: 1rem;
+    }
+
+    .bottom-nav a {
+      color: var(--accent2);
+      font-size: 0.85rem;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .bottom-nav a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="../../" class="back">← DJ Toolkit</a>
+  <h1>🎡 Tabela Camelot</h1>
+  <p>Clique em qualquer tom para ver quais são harmonicamente compatíveis.</p>
+</header>
+
+<div class="container">
+
+  <div class="tip">
+    <strong>Como usar:</strong> Encontre o código Camelot da sua música atual no software (VirtualDJ, Serato, rekordbox mostram isso automaticamente). Clique no tom e veja quais faixas podem entrar em seguida sem dissonância.
+  </div>
+
+  <!-- RODA SVG -->
+  <div class="wheel-wrap">
+    <div class="wheel">
+      <svg viewBox="0 0 340 340" id="camelot-svg"></svg>
+    </div>
+  </div>
+
+  <!-- RESULTADO -->
+  <div class="result-panel">
+    <h2>🎯 Compatibilidades</h2>
+    <div id="result-content">Clique em um tom na roda acima para ver as opções de mixagem.</div>
+  </div>
+
+  <!-- TABELA COMPLETA -->
+  <div class="table-card">
+    <h2>📋 Referência Completa</h2>
+    <table id="ref-table">
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Tom</th>
+          <th>Equivalente</th>
+          <th>Compatíveis</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="../bpm/">← Calculadora BPM</a>
+    <a href="../setlist/">Montador de Setlist →</a>
+  </div>
+
+</div>
+
+<script>
+// ── DADOS CAMELOT ─────────────────────────────────────────────────────────────
+// Cada entrada: código, nome do tom, equivalente enarmônico, cor
+const KEYS = [
+  { code:"1A",  name:"Ab menor",  eq:"G# menor",  color:"#ef4444" },
+  { code:"2A",  name:"Eb menor",  eq:"D# menor",  color:"#f97316" },
+  { code:"3A",  name:"Bb menor",  eq:"A# menor",  color:"#eab308" },
+  { code:"4A",  name:"F menor",   eq:"F menor",   color:"#84cc16" },
+  { code:"5A",  name:"C menor",   eq:"C menor",   color:"#22c55e" },
+  { code:"6A",  name:"G menor",   eq:"G menor",   color:"#14b8a6" },
+  { code:"7A",  name:"D menor",   eq:"D menor",   color:"#06b6d4" },
+  { code:"8A",  name:"A menor",   eq:"A menor",   color:"#3b82f6" },
+  { code:"9A",  name:"E menor",   eq:"E menor",   color:"#6366f1" },
+  { code:"10A", name:"B menor",   eq:"B menor",   color:"#8b5cf6" },
+  { code:"11A", name:"F# menor",  eq:"Gb menor",  color:"#a855f7" },
+  { code:"12A", name:"C# menor",  eq:"Db menor",  color:"#ec4899" },
+  { code:"1B",  name:"B maior",   eq:"B maior",   color:"#ef4444" },
+  { code:"2B",  name:"F# maior",  eq:"Gb maior",  color:"#f97316" },
+  { code:"3B",  name:"Db maior",  eq:"C# maior",  color:"#eab308" },
+  { code:"4B",  name:"Ab maior",  eq:"G# maior",  color:"#84cc16" },
+  { code:"5B",  name:"Eb maior",  eq:"D# maior",  color:"#22c55e" },
+  { code:"6B",  name:"Bb maior",  eq:"A# maior",  color:"#14b8a6" },
+  { code:"7B",  name:"F maior",   eq:"F maior",   color:"#06b6d4" },
+  { code:"8B",  name:"C maior",   eq:"C maior",   color:"#3b82f6" },
+  { code:"9B",  name:"G maior",   eq:"G maior",   color:"#6366f1" },
+  { code:"10B", name:"D maior",   eq:"D maior",   color:"#8b5cf6" },
+  { code:"11B", name:"A maior",   eq:"A maior",   color:"#a855f7" },
+  { code:"12B", name:"E maior",   eq:"E maior",   color:"#ec4899" },
+];
+
+// Regras de compatibilidade Camelot
+function getCompatibles(code) {
+  const num = parseInt(code);
+  const type = code.slice(-1); // A ou B
+  const opposite = type === "A" ? "B" : "A";
+
+  const prev = ((num - 2 + 12) % 12) + 1;
+  const next = (num % 12) + 1;
+
+  return [
+    { code: `${num}${type}`,     note: "mesmo tom" },
+    { code: `${prev}${type}`,    note: "-1 (energia cai)" },
+    { code: `${next}${type}`,    note: "+1 (energia sobe)" },
+    { code: `${num}${opposite}`, note: "relativo (maior/menor)" },
+  ];
+}
+
+function findKey(code) {
+  return KEYS.find(k => k.code === code);
+}
+
+// ── RODA SVG ──────────────────────────────────────────────────────────────────
+const svg = document.getElementById("camelot-svg");
+const cx = 170, cy = 170;
+const outerR = 160, innerR = 85, midR = 122;
+
+let selected = null;
+
+function polarToXY(angle, r) {
+  const rad = (angle - 90) * Math.PI / 180;
+  return {
+    x: cx + r * Math.cos(rad),
+    y: cy + r * Math.sin(rad)
+  };
+}
+
+function slicePath(startAngle, endAngle, r1, r2) {
+  const s1 = polarToXY(startAngle, r1);
+  const e1 = polarToXY(endAngle,   r1);
+  const s2 = polarToXY(startAngle, r2);
+  const e2 = polarToXY(endAngle,   r2);
+  return [
+    `M ${s1.x} ${s1.y}`,
+    `A ${r1} ${r1} 0 0 1 ${e1.x} ${e1.y}`,
+    `L ${e2.x} ${e2.y}`,
+    `A ${r2} ${r2} 0 0 0 ${s2.x} ${s2.y}`,
+    "Z"
+  ].join(" ");
+}
+
+function buildWheel() {
+  const sliceAngle = 360 / 12;
+
+  // Anel externo: B (maior)
+  for (let i = 0; i < 12; i++) {
+    const key = KEYS[12 + i]; // 1B..12B
+    const start = i * sliceAngle - sliceAngle / 2;
+    const end   = start + sliceAngle;
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg","path");
+    path.setAttribute("d", slicePath(start, end, outerR, midR));
+    path.setAttribute("fill", key.color + "cc");
+    path.setAttribute("class", "slice");
+    path.dataset.code = key.code;
+    path.addEventListener("click", () => selectKey(key.code));
+
+    // Label
+    const mid = (start + end) / 2;
+    const lp  = polarToXY(mid, (outerR + midR) / 2);
+    const text = document.createElementNS("http://www.w3.org/2000/svg","text");
+    text.setAttribute("x", lp.x);
+    text.setAttribute("y", lp.y);
+    text.setAttribute("text-anchor","middle");
+    text.setAttribute("dominant-baseline","middle");
+    text.setAttribute("fill","#fff");
+    text.setAttribute("font-size","11");
+    text.setAttribute("font-weight","700");
+    text.setAttribute("pointer-events","none");
+    text.textContent = key.code;
+
+    svg.appendChild(path);
+    svg.appendChild(text);
+  }
+
+  // Anel interno: A (menor)
+  for (let i = 0; i < 12; i++) {
+    const key = KEYS[i]; // 1A..12A
+    const start = i * sliceAngle - sliceAngle / 2;
+    const end   = start + sliceAngle;
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg","path");
+    path.setAttribute("d", slicePath(start, end, midR, innerR));
+    path.setAttribute("fill", key.color + "99");
+    path.setAttribute("class", "slice");
+    path.dataset.code = key.code;
+    path.addEventListener("click", () => selectKey(key.code));
+
+    const mid = (start + end) / 2;
+    const lp  = polarToXY(mid, (midR + innerR) / 2);
+    const text = document.createElementNS("http://www.w3.org/2000/svg","text");
+    text.setAttribute("x", lp.x);
+    text.setAttribute("y", lp.y);
+    text.setAttribute("text-anchor","middle");
+    text.setAttribute("dominant-baseline","middle");
+    text.setAttribute("fill","#fff");
+    text.setAttribute("font-size","10");
+    text.setAttribute("font-weight","700");
+    text.setAttribute("pointer-events","none");
+    text.textContent = key.code;
+
+    svg.appendChild(path);
+    svg.appendChild(text);
+  }
+
+  // Centro
+  const circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+  circle.setAttribute("cx", cx);
+  circle.setAttribute("cy", cy);
+  circle.setAttribute("r", innerR - 2);
+  circle.setAttribute("fill","#0e0e14");
+  svg.appendChild(circle);
+
+  const centerText = document.createElementNS("http://www.w3.org/2000/svg","text");
+  centerText.setAttribute("x", cx);
+  centerText.setAttribute("y", cy - 8);
+  centerText.setAttribute("text-anchor","middle");
+  centerText.setAttribute("fill","#94a3b8");
+  centerText.setAttribute("font-size","11");
+  centerText.textContent = "Externo = Maior";
+  svg.appendChild(centerText);
+
+  const centerText2 = document.createElementNS("http://www.w3.org/2000/svg","text");
+  centerText2.setAttribute("x", cx);
+  centerText2.setAttribute("y", cy + 8);
+  centerText2.setAttribute("text-anchor","middle");
+  centerText2.setAttribute("fill","#94a3b8");
+  centerText2.setAttribute("font-size","11");
+  centerText2.textContent = "Interno = Menor";
+  svg.appendChild(centerText2);
+}
+
+// ── SELEÇÃO ───────────────────────────────────────────────────────────────────
+function selectKey(code) {
+  selected = code;
+  const compatibles = getCompatibles(code);
+  const compatCodes = compatibles.map(c => c.code);
+
+  // Atualiza estilos da roda
+  document.querySelectorAll(".slice").forEach(s => {
+    s.classList.remove("selected","compatible","dimmed");
+    if (s.dataset.code === code) {
+      s.classList.add("selected");
+    } else if (compatCodes.includes(s.dataset.code)) {
+      s.classList.add("compatible");
+    } else {
+      s.classList.add("dimmed");
+    }
+  });
+
+  // Painel de resultado
+  const key = findKey(code);
+  const compatHTML = compatibles.map(c => {
+    const k = findKey(c.code);
+    if (!k) return "";
+    return `
+      <div class="compat-item">
+        <div class="compat-dot" style="background:${k.color}"></div>
+        <span class="compat-code">${c.code}</span>
+        <span>—</span>
+        <span>${k.name}</span>
+        <span class="compat-note">(${c.note})</span>
+      </div>`;
+  }).join("");
+
+  document.getElementById("result-content").innerHTML = `
+    <div class="selected-key">
+      <div class="key-badge" style="background:${key.color}33; border-color:${key.color}">
+        ${key.code}
+      </div>
+      <div class="key-info">
+        <h3>${key.name}</h3>
+        <p>Equivalente: ${key.eq}</p>
+      </div>
+    </div>
+    <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.5rem;">
+      Pode mixar diretamente com:
+    </div>
+    <div class="compat-list">${compatHTML}</div>
+  `;
+
+  // Destaca linha na tabela
+  document.querySelectorAll("#ref-table tbody tr").forEach(tr => {
+    tr.style.background = tr.dataset.code === code ? "var(--surface2)" : "";
+  });
+}
+
+// ── TABELA ────────────────────────────────────────────────────────────────────
+function buildTable() {
+  const tbody = document.querySelector("#ref-table tbody");
+  KEYS.forEach(key => {
+    const compatibles = getCompatibles(key.code);
+    const codes = compatibles.filter(c => c.code !== key.code).map(c => c.code).join(", ");
+    const tr = document.createElement("tr");
+    tr.dataset.code = key.code;
+    tr.style.cursor = "pointer";
+    tr.innerHTML = `
+      <td class="code-cell">
+        <span class="color-dot" style="background:${key.color}"></span>${key.code}
+      </td>
+      <td>${key.name}</td>
+      <td style="color:var(--muted)">${key.eq}</td>
+      <td class="compat-codes">${codes}</td>
+    `;
+    tr.addEventListener("click", () => selectKey(key.code));
+    tbody.appendChild(tr);
+  });
+}
+
+buildWheel();
+buildTable();
+</script>
+
+</body>
+</html>
