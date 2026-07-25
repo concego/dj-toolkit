@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DJ Toolkit — Monte seu Setup</title>
+  <style>
+    :root {
+      --bg: #0e0e14;
+      --surface: #1a1a26;
+      --accent: #7c3aed;
+      --accent2: #a855f7;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: #2d2d42;
+      --green: #22c55e;
+      --yellow: #eab308;
+      --red: #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    header { text-align: center; margin-bottom: 2.5rem; }
+    header h1 {
+      font-size: 2rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+    header p { color: var(--muted); font-size: 1rem; }
+
+    .quiz-container { max-width: 680px; margin: 0 auto; }
+
+    .step { display: none; animation: fadeIn 0.3s ease; }
+    .step.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .step-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent2);
+      margin-bottom: 0.5rem;
+    }
+
+    .step h2 { font-size: 1.4rem; margin-bottom: 1.5rem; line-height: 1.4; }
+
+    .options { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .option {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+      color: var(--text);
+      font-size: 1rem;
+      width: 100%;
+    }
+    .option:hover { border-color: var(--accent); background: #22224a; }
+    .option.selected { border-color: var(--accent2); background: #2d1f4a; }
+    .option .opt-title { font-weight: 600; }
+    .option .opt-desc { font-size: 0.85rem; color: var(--muted); margin-top: 0.2rem; }
+
+    .nav { display: flex; justify-content: space-between; margin-top: 2rem; gap: 1rem; }
+
+    button {
+      padding: 0.75rem 1.75rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-back { background: var(--surface); color: var(--muted); border: 2px solid var(--border); }
+    .btn-back:hover { border-color: var(--muted); color: var(--text); }
+    .btn-next { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; margin-left: auto; }
+    .btn-next:hover { opacity: 0.85; }
+    .btn-next:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    .progress-bar { height: 4px; background: var(--border); border-radius: 99px; margin-bottom: 2rem; }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
+
+    #result { display: none; }
+
+    .tier-badge {
+      display: inline-block;
+      padding: 0.3rem 1rem;
+      border-radius: 99px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+    .tier-entrada { background: #14532d; color: var(--green); }
+    .tier-intermediario { background: #713f12; color: var(--yellow); }
+    .tier-profissional { background: #7f1d1d; color: var(--red); }
+
+    .result-header { margin-bottom: 2rem; }
+    .result-header h2 { font-size: 1.6rem; margin-bottom: 0.5rem; }
+    .result-header p { color: var(--muted); }
+
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .section h3 {
+      color: var(--accent2);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.8rem;
+    }
+
+    .resource-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+      gap: 1rem;
+    }
+    .resource-item:last-child { border-bottom: none; }
+    .resource-name { font-weight: 600; font-size: 0.95rem; }
+    .resource-desc { font-size: 0.82rem; color: var(--muted); margin-top: 0.15rem; }
+    .resource-why { font-size: 0.8rem; color: #a78bfa; margin-top: 0.2rem; font-style: italic; }
+    .resource-price {
+      font-weight: 700;
+      color: var(--accent2);
+      white-space: nowrap;
+      font-size: 0.9rem;
+      text-align: right;
+      min-width: 100px;
+    }
+    .resource-price small { display: block; color: var(--muted); font-weight: 400; font-size: 0.75rem; }
+
+    .total-box {
+      background: #1e1040;
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .total-box .label { color: var(--muted); font-size: 0.9rem; }
+    .total-box .value { font-size: 1.3rem; font-weight: 700; color: var(--accent2); }
+
+    .btn-restart {
+      background: var(--surface);
+      color: var(--accent2);
+      border: 2px solid var(--accent);
+      width: 100%;
+      margin-top: 1rem;
+      padding: 0.9rem;
+      border-radius: 10px;
+    }
+    .btn-restart:hover { background: #22224a; }
+
+    .note {
+      background: #1c1c30;
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🎧 Monte seu Setup DJ</h1>
+  <p>Responda 5 perguntas e receba uma recomendação personalizada de equipamentos e serviços.</p>
+</header>
+
+<div class="quiz-container">
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="progress" style="width: 0%"></div>
+  </div>
+
+  <!-- PASSO 1 -->
+  <div class="step active" id="step-1">
+    <div class="step-label">Pergunta 1 de 5</div>
+    <h2>Qual é o seu nível atual como DJ?</h2>
+    <div class="options">
+      <button class="option" data-q="nivel" data-v="zero">
+        <div class="opt-title">Nunca toquei</div>
+        <div class="opt-desc">Estou começando do zero, sem experiência com equipamento ou software.</div>
+      </button>
+      <button class="option" data-q="nivel" data-v="retorno">
+        <div class="opt-title">Já toquei, mas preciso recomeçar</div>
+        <div class="opt-desc">Tenho alguma noção, mas fiquei parado ou preciso me reorganizar.</div>
+      </button>
+      <button class="option" data-q="nivel" data-v="experiente">
+        <div class="opt-title">Tenho experiência</div>
+        <div class="opt-desc">Já toco em eventos e quero melhorar ou profissionalizar meu setup.</div>
+      </button>
+    </div>
+    <div class="nav">
+      <button class="btn-next" id="next-1" disabled onclick="nextStep(1)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- PASSO 2 -->
+  <div class="step" id="step-2">
+    <div class="step-label">Pergunta 2 de 5</div>
+    <h2>Qual é o seu estilo musical principal?</h2>
+    <div class="options">
+      <button class="option" data-q="estilo" data-v="eletronico">
+        <div class="opt-title">Eletrônico comercial</div>
+        <div class="opt-desc">House, EDM, big room — festas e baladas mainstream.</div>
+      </button>
+      <button class="option" data-q="estilo" data-v="deep">
+        <div class="opt-title">Deep & Afro House</div>
+        <div class="opt-desc">Underground, groovy, referências como Black Coffee e Themba.</div>
+      </button>
+      <button class="option" data-q="estilo" data-v="hiphop">
+        <div class="opt-title">Hip-hop & R&B</div>
+        <div class="opt-desc">Trap, rap, R&B, funk — batidas pesadas e vocais.</div>
+      </button>
+      <button class="option" data-q="estilo" data-v="openformat">
+        <div class="opt-title">Open format</div>
+        <div class="opt-desc">Misturo tudo — pop, eletrônico, funk, sertanejo, o que o evento pedir.</div>
+      </button>
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="prevStep(2)">← Voltar</button>
+      <button class="btn-next" id="next-2" disabled onclick="nextStep(2)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- PASSO 3 -->
+  <div class="step" id="step-3">
+    <div class="step-label">Pergunta 3 de 5</div>
+    <h2>Qual é o seu objetivo principal agora?</h2>
+    <div class="options">
+      <button class="option" data-q="objetivo" data-v="casa">
+        <div class="opt-title">Aprender em casa</div>
+        <div class="opt-desc">Quero praticar e desenvolver minha técnica antes de tocar pra público.</div>
+      </button>
+      <button class="option" data-q="objetivo" data-v="pequeno">
+        <div class="opt-title">Tocar em festas pequenas</div>
+        <div class="opt-desc">Churrascos, aniversários, eventos íntimos — público conhecido.</div>
+      </button>
+      <button class="option" data-q="objetivo" data-v="medio">
+        <div class="opt-title">Eventos de médio porte</div>
+        <div class="opt-desc">Bares, casas de show, festas abertas — já quero ser pago por isso.</div>
+      </button>
+      <button class="option" data-q="objetivo" data-v="clube">
+        <div class="opt-title">Clubes e grandes eventos</div>
+        <div class="opt-desc">Quero jogar no nível profissional — residências, line-ups, festivais.</div>
+      </button>
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="prevStep(3)">← Voltar</button>
+      <button class="btn-next" id="next-3" disabled onclick="nextStep(3)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- PASSO 4 -->
+  <div class="step" id="step-4">
+    <div class="step-label">Pergunta 4 de 5</div>
+    <h2>Quanto você pode investir por mês em serviços?</h2>
+    <div class="options">
+      <button class="option" data-q="orcamento" data-v="baixo">
+        <div class="opt-title">Até R$ 100/mês</div>
+        <div class="opt-desc">Orçamento bem restrito — quero o essencial pelo menor custo.</div>
+      </button>
+      <button class="option" data-q="orcamento" data-v="medio">
+        <div class="opt-title">R$ 100 a R$ 300/mês</div>
+        <div class="opt-desc">Consigo investir com consistência, desde que valha a pena.</div>
+      </button>
+      <button class="option" data-q="orcamento" data-v="alto">
+        <div class="opt-title">R$ 300 a R$ 600/mês</div>
+        <div class="opt-desc">Estou levando a sério e topo investir no setup certo.</div>
+      </button>
+      <button class="option" data-q="orcamento" data-v="semlimite">
+        <div class="opt-title">Sem limite definido</div>
+        <div class="opt-desc">Quero o melhor disponível — o retorno justifica o investimento.</div>
+      </button>
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="prevStep(4)">← Voltar</button>
+      <button class="btn-next" id="next-4" disabled onclick="nextStep(4)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- PASSO 5 -->
+  <div class="step" id="step-5">
+    <div class="step-label">Pergunta 5 de 5</div>
+    <h2>O que você já tem de equipamento?</h2>
+    <div class="options">
+      <button class="option" data-q="equipamento" data-v="nada">
+        <div class="opt-title">Não tenho nada</div>
+        <div class="opt-desc">Preciso começar do zero — computador, controladora, tudo.</div>
+      </button>
+      <button class="option" data-q="equipamento" data-v="notebook">
+        <div class="opt-title">Tenho um notebook</div>
+        <div class="opt-desc">Tenho computador, mas não tenho controladora nem software profissional.</div>
+      </button>
+      <button class="option" data-q="equipamento" data-v="completo">
+        <div class="opt-title">Tenho notebook + controladora</div>
+        <div class="opt-desc">Já tenho o básico — quero melhorar os serviços e o software.</div>
+      </button>
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="prevStep(5)">← Voltar</button>
+      <button class="btn-next" id="next-5" disabled onclick="showResult()">Ver meu setup →</button>
+    </div>
+  </div>
+
+  <!-- RESULTADO -->
+  <div id="result"></div>
+
+</div>
+
+<script>
+const RECURSOS = {
+  software: {
+    mixxx: {
+      nome: "Mixxx",
+      desc: "Software de DJ gratuito e open-source. Completo para prática e eventos.",
+      preco: "Gratuito", unidade: "",
+      por_que: "Ideal para quem está começando — sem custo, sem limitações.",
+      nivel: ["entrada"], estilo: ["eletronico","deep","hiphop","openformat"]
+    },
+    virtualdj_home: {
+      nome: "VirtualDJ Home",
+      desc: "Versão acessível do VirtualDJ. Boa pra prática doméstica.",
+      preco: "~R$ 24", unidade: "/mês",
+      por_que: "Mais recursos que o Mixxx, ainda acessível para iniciantes.",
+      nivel: ["entrada","retorno"], estilo: ["eletronico","deep","hiphop","openformat"]
+    },
+    virtualdj_pro: {
+      nome: "VirtualDJ Pro",
+      desc: "Stems por IA, integração com Beatport/SoundCloud, todos os controladores. Liberado para gigs pagos.",
+      preco: "~R$ 115", unidade: "/mês",
+      por_que: "Padrão para quem toca em eventos pagos. Stems em tempo real e streams integrados.",
+      nivel: ["retorno","experiente"], estilo: ["eletronico","deep","hiphop","openformat"]
+    },
+    serato_pro: {
+      nome: "Serato DJ Pro",
+      desc: "Software de referência em clubes e festivais. Integração nativa com Pioneer.",
+      preco: "~R$ 200", unidade: "/mês",
+      por_que: "Padrão da indústria para grandes eventos — o que você encontra na booth.",
+      nivel: ["experiente"], estilo: ["eletronico","deep","openformat"]
+    }
+  },
+  pools: {
+    mymp3pool: {
+      nome: "MyMP3Pool",
+      desc: "Pool com hits de festa e party classics. Fácil de usar.",
+      preco: "~R$ 100", unidade: "/mês",
+      por_que: "Ótimo custo-benefício para quem precisa de músicas populares.",
+      nivel: ["entrada","retorno"], estilo: ["eletronico","openformat","hiphop"]
+    },
+    djcity: {
+      nome: "DJcity",
+      desc: "Pool forte em hip-hop, R&B, Latin e pop. Remixes e edits exclusivos.",
+      preco: "~R$ 60", unidade: "/mês",
+      por_que: "Referência para DJs de hip-hop e open format. Melhor custo do mercado.",
+      nivel: ["entrada","retorno","experiente"], estilo: ["hiphop","openformat"]
+    },
+    beatport_essential: {
+      nome: "Beatport Essential",
+      desc: "Acesso para escuta e descoberta. Sem download incluído.",
+      preco: "~R$ 60", unidade: "/mês",
+      por_que: "Para explorar o catálogo antes de comprar. Bom ponto de entrada.",
+      nivel: ["entrada"], estilo: ["eletronico","deep"]
+    },
+    beatport_advanced: {
+      nome: "Beatport Advanced",
+      desc: "Streaming integrado direto no VirtualDJ, Serato e rekordbox.",
+      preco: "~R$ 96", unidade: "/mês",
+      por_que: "Toca direto no software sem sair do workflow. Padrão para DJs de eletrônico.",
+      nivel: ["retorno","experiente"], estilo: ["eletronico","deep","openformat"]
+    },
+    traxsource: {
+      nome: "Traxsource",
+      desc: "Especializado em house, deep house e afro house. O Beatport do underground.",
+      preco: "~R$ 120", unidade: "/mês",
+      por_que: "Referência mundial para deep e afro house. Black Coffee, Themba e similares.",
+      nivel: ["retorno","experiente"], estilo: ["deep"]
+    },
+    bpm_supreme: {
+      nome: "BPM Supreme",
+      desc: "Pool premium com remixes e edits exclusivos. Cobre eletrônico, pop, hip-hop e Latin.",
+      preco: "~R$ 140", unidade: "/mês",
+      por_que: "Padrão da indústria para DJs open format. Qualidade e exclusividade.",
+      nivel: ["experiente"], estilo: ["eletronico","openformat","hiphop"]
+    },
+    zipdj: {
+      nome: "zipDJ",
+      desc: "Downloads ilimitados de eletrônico. Catálogo amplo incluindo back catalogue.",
+      preco: "~R$ 150", unidade: "/mês",
+      por_que: "Ideal para construir uma biblioteca sólida de eletrônico rapidamente.",
+      nivel: ["experiente"], estilo: ["eletronico","deep"]
+    }
+  },
+  hardware: {
+    numark_party: {
+      nome: "Numark Party Mix II",
+      desc: "Controladora entry-level. Simples, compacta, boa para aprender.",
+      preco: "~R$ 1.200", unidade: " (único)",
+      por_que: "Menor custo de entrada. Boa para prática doméstica e festas pequenas.",
+      nivel: ["entrada"], equipamento: ["nada"]
+    },
+    pioneer_flx4: {
+      nome: "Pioneer DDJ-FLX4",
+      desc: "2 canais, compatível com VirtualDJ, Serato e rekordbox.",
+      preco: "~R$ 3.000", unidade: " (único)",
+      por_que: "Pioneer é reconhecida em eventos. Dá credibilidade e abre portas.",
+      nivel: ["retorno","experiente"], equipamento: ["nada","notebook"]
+    },
+    pioneer_flx6: {
+      nome: "Pioneer DDJ-FLX6",
+      desc: "4 canais, jog wheels maiores — setup de clube em casa.",
+      preco: "~R$ 7.875", unidade: " (único)",
+      por_que: "Simula a booth de um clube real. Para quem mira em grandes eventos.",
+      nivel: ["experiente"], equipamento: ["nada","notebook"]
+    },
+    notebook_mid: {
+      nome: "Notebook i5/Ryzen 5, 8GB RAM",
+      desc: "Configuração mínima recomendada para rodar VirtualDJ Pro sem travamentos.",
+      preco: "~R$ 2.500", unidade: " (único)",
+      por_que: "Evita latência e travamentos durante o set.",
+      nivel: ["retorno","experiente"], equipamento: ["nada"]
+    }
+  },
+  gratuitos: {
+    soundcloud: {
+      nome: "SoundCloud (free)",
+      desc: "Remixes e edits gratuitos. Busque por 'free download' nas descrições.",
+      preco: "Gratuito", unidade: "",
+      por_que: "Enorme acervo de material independente e remixes não-oficiais.",
+      nivel: ["entrada"], estilo: ["eletronico","deep","hiphop","openformat"]
+    },
+    hypeddit: {
+      nome: "Hypeddit",
+      desc: "Downloads gratuitos em troca de follow/curtida.",
+      preco: "Gratuito", unidade: "",
+      por_que: "Boa fonte de edits de músicas populares sem custo.",
+      nivel: ["entrada"], estilo: ["eletronico","openformat","hiphop"]
+    },
+    bandcamp: {
+      nome: "Bandcamp (name your price)",
+      desc: "Artistas independentes com preço livre — coloque R$ 0 e baixe.",
+      preco: "Gratuito", unidade: "",
+      por_que: "Alta qualidade (WAV) e artistas que não estão em nenhuma outra plataforma.",
+      nivel: ["entrada"], estilo: ["deep","eletronico"]
+    }
+  }
+};
+
+const answers = {};
+
+function calcTier(a) {
+  if (a.nivel === "experiente" || a.objetivo === "clube" || a.orcamento === "semlimite") return "profissional";
+  if (a.nivel === "retorno" || a.objetivo === "medio" || a.orcamento === "alto") return "intermediario";
+  return "entrada";
+}
+
+function recomendar(a) {
+  const tier = calcTier(a);
+  const nivelMap = { entrada: ["entrada"], intermediario: ["retorno"], profissional: ["experiente"] };
+  const niveis = nivelMap[tier];
+
+  const filtraEstilo = (cat) =>
+    Object.values(RECURSOS[cat]).filter(r =>
+      r.nivel.some(n => niveis.includes(n)) && r.estilo && r.estilo.includes(a.estilo)
+    );
+
+  const filtraEquip = (cat) =>
+    Object.values(RECURSOS[cat]).filter(r =>
+      r.nivel.some(n => niveis.includes(n)) && r.equipamento && r.equipamento.includes(a.equipamento)
+    );
+
+  let software = [];
+  if (tier === "entrada") software = [RECURSOS.software.mixxx, RECURSOS.software.virtualdj_home];
+  else if (tier === "intermediario") software = [RECURSOS.software.virtualdj_pro];
+  else software = [RECURSOS.software.virtualdj_pro, RECURSOS.software.serato_pro];
+
+  let pools = filtraEstilo("pools");
+  if (a.orcamento === "baixo") pools = pools.slice(0, 2);
+
+  const hardware = filtraEquip("hardware");
+  const gratuitos = tier === "entrada" ? filtraEstilo("gratuitos") : [];
+
+  return { tier, software, pools, hardware, gratuitos };
+}
+
+function renderItem(r) {
+  return `<div class="resource-item">
+    <div>
+      <div class="resource-name">${r.nome}</div>
+      <div class="resource-desc">${r.desc}</div>
+      <div class="resource-why">${r.por_que}</div>
+    </div>
+    <div class="resource-price">${r.preco}<small>${r.unidade}</small></div>
+  </div>`;
+}
+
+function calcTotal(rec) {
+  let mensal = 0, unico = 0;
+  [...rec.software, ...rec.pools, ...rec.gratuitos].forEach(r => {
+    if (r.unidade.includes("mês")) {
+      const v = parseFloat(r.preco.replace(/[^\d]/g,""));
+      if (!isNaN(v)) mensal += v;
+    }
+  });
+  rec.hardware.forEach(r => {
+    const v = parseFloat(r.preco.replace(/[^\d,.]/g,"").replace(",","."));
+    if (!isNaN(v)) unico += v;
+  });
+  return { mensal, unico };
+}
+
+const TIER_INFO = {
+  entrada: { label: "🟢 Setup Entrada", badge: "tier-entrada" },
+  intermediario: { label: "🟡 Setup Intermediário", badge: "tier-intermediario" },
+  profissional: { label: "🔴 Setup Profissional", badge: "tier-profissional" }
+};
+
+function showResult() {
+  document.getElementById("step-5").classList.remove("active");
+  document.getElementById("progress").style.width = "100%";
+
+  const rec = recomendar(answers);
+  const { tier, software, pools, hardware, gratuitos } = rec;
+  const info = TIER_INFO[tier];
+  const { mensal, unico } = calcTotal(rec);
+
+  const el = document.getElementById("result");
+  el.style.display = "block";
+
+  const secao = (icone, titulo, items) => items.length ? `
+    <div class="section">
+      <h3>${icone} ${titulo}</h3>
+      ${items.map(renderItem).join("")}
+    </div>` : "";
+
+  el.innerHTML = `
+    <div class="result-header">
+      <span class="tier-badge ${info.badge}">${info.label}</span>
+      <h2>Seu setup personalizado</h2>
+      <p>Baseado no seu perfil, montamos a combinação mais eficiente de ferramentas e serviços.</p>
+    </div>
+    <div class="note">
+      💡 Teoria é tão importante quanto equipamento. Explore a seção <strong>Conceitos</strong> para entender por que cada escolha faz sentido antes de comprar.
+    </div>
+    ${secao("🎛️", "Software", software)}
+    ${secao("🎵", "Fontes de Música — Pools & Serviços", pools)}
+    ${secao("🆓", "Fontes Gratuitas para Começar", gratuitos)}
+    ${secao("🎧", "Equipamento", hardware)}
+    <div class="total-box">
+      <div>
+        <div class="label">Estimativa mensal (serviços)</div>
+        <div class="value">~R$ ${mensal.toLocaleString("pt-BR")}/mês</div>
+      </div>
+      ${unico > 0 ? `<div style="text-align:right">
+        <div class="label">Investimento em equipamento</div>
+        <div class="value">~R$ ${unico.toLocaleString("pt-BR")}</div>
+      </div>` : ""}
+    </div>
+    <button class="btn-restart" onclick="restart()">↩ Refazer o questionário</button>
+  `;
+}
+
+function updateProgress(step) {
+  document.getElementById("progress").style.width = `${(step / 5) * 100}%`;
+}
+
+function nextStep(current) {
+  document.getElementById(`step-${current}`).classList.remove("active");
+  document.getElementById(`step-${current + 1}`).classList.add("active");
+  updateProgress(current + 1);
+}
+
+function prevStep(current) {
+  document.getElementById(`step-${current}`).classList.remove("active");
+  document.getElementById(`step-${current - 1}`).classList.add("active");
+  updateProgress(current - 1);
+}
+
+function restart() {
+  Object.keys(answers).forEach(k => delete answers[k]);
+  document.getElementById("result").style.display = "none";
+  document.getElementById("result").innerHTML = "";
+  for (let i = 1; i <= 5; i++) {
+    document.getElementById(`step-${i}`).classList.remove("active");
+    document.querySelectorAll(`#step-${i} .option`).forEach(b => b.classList.remove("selected"));
+    document.getElementById(`next-${i}`).disabled = true;
+  }
+  document.getElementById("step-1").classList.add("active");
+  updateProgress(0);
+}
+
+document.querySelectorAll(".option").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const q = btn.dataset.q;
+    answers[q] = btn.dataset.v;
+    document.querySelectorAll(`[data-q="${q}"]`).forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+    const stepNum = btn.closest(".step").id.replace("step-","");
+    document.getElementById(`next-${stepNum}`).disabled = false;
+  });
+});
+</script>
+</body>
+</html>
