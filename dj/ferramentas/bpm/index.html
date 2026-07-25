@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DJ Toolkit — Calculadora de BPM</title>
+  <style>
+    :root {
+      --bg: #0e0e14;
+      --surface: #1a1a26;
+      --surface2: #22223a;
+      --accent: #7c3aed;
+      --accent2: #a855f7;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: #2d2d42;
+      --green: #22c55e;
+      --yellow: #eab308;
+      --red: #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    header .back {
+      display: inline-block;
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-decoration: none;
+      margin-bottom: 1rem;
+    }
+    header .back:hover { color: var(--accent2); }
+
+    header h1 {
+      font-size: 1.9rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.4rem;
+    }
+
+    header p { color: var(--muted); font-size: 0.95rem; }
+
+    .container { max-width: 620px; margin: 0 auto; }
+
+    /* ── INPUT ── */
+    .input-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .input-card label {
+      display: block;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent2);
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .bpm-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .bpm-btn {
+      width: 48px; height: 48px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      background: var(--surface2);
+      color: var(--text);
+      font-size: 1.4rem;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: border-color 0.2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .bpm-btn:hover { border-color: var(--accent2); }
+
+    #bpm-input {
+      flex: 1;
+      background: var(--surface2);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 2.2rem;
+      font-weight: 700;
+      text-align: center;
+      padding: 0.5rem;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    #bpm-input:focus { border-color: var(--accent); }
+
+    .bpm-unit {
+      color: var(--muted);
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      width: 48px;
+    }
+
+    /* TAP */
+    #tap-btn {
+      width: 100%;
+      margin-top: 1.25rem;
+      padding: 0.85rem;
+      background: var(--surface2);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    #tap-btn:active {
+      background: #2d1f4a;
+      border-color: var(--accent2);
+      transform: scale(0.98);
+    }
+    #tap-hint {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+    }
+
+    /* ── RESULTADO ── */
+    .result-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .result-card h2 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent2);
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+    }
+
+    .zones {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .zone {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--surface2);
+      border-radius: 10px;
+      padding: 0.85rem 1.1rem;
+      border: 1px solid var(--border);
+    }
+
+    .zone-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .zone-label {
+      font-size: 0.82rem;
+      color: var(--muted);
+      width: 160px;
+      flex-shrink: 0;
+    }
+
+    .zone-range {
+      font-size: 1.05rem;
+      font-weight: 700;
+      flex: 1;
+    }
+
+    .zone-note {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    /* cores das zonas */
+    .z-ideal  { background: #22c55e; }
+    .z-ok     { background: #eab308; }
+    .z-duplo  { background: #22d3ee; }
+    .z-half   { background: #a78bfa; }
+
+    /* ── REFERÊNCIA DE GÊNEROS ── */
+    .genre-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .genre-card h2 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent2);
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+    }
+
+    .genre-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .genre-item {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .genre-item:hover { border-color: var(--accent2); }
+    .genre-item.active { border-color: var(--accent2); background: #2d1f4a; }
+
+    .genre-item .g-name {
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .genre-item .g-bpm {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    /* ── DICA ── */
+    .tip {
+      background: #1c1c30;
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 0.85rem 1rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .tip strong { color: var(--text); }
+
+    /* ── RODAPÉ NAV ── */
+    .bottom-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+      gap: 1rem;
+    }
+
+    .bottom-nav a {
+      color: var(--accent2);
+      font-size: 0.85rem;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .bottom-nav a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="../../" class="back">← DJ Toolkit</a>
+  <h1>⏱ Calculadora de BPM</h1>
+  <p>Descubra a faixa segura de transição para qualquer BPM.</p>
+</header>
+
+<div class="container">
+
+  <!-- INPUT -->
+  <div class="input-card">
+    <label>BPM da música atual</label>
+    <div class="bpm-row">
+      <button class="bpm-btn" onclick="adjustBpm(-1)">−</button>
+      <input type="number" id="bpm-input" value="128" min="60" max="200" oninput="calcular()" />
+      <span class="bpm-unit">BPM</span>
+      <button class="bpm-btn" onclick="adjustBpm(+1)">+</button>
+    </div>
+    <button id="tap-btn" onclick="tap()">🥁 Tap BPM</button>
+    <div id="tap-hint">Toque no ritmo da música 4 vezes</div>
+  </div>
+
+  <!-- ZONAS -->
+  <div class="result-card">
+    <h2>🎯 Faixas de Transição</h2>
+    <div class="zones" id="zones"></div>
+  </div>
+
+  <!-- DICA CONTEXTUAL -->
+  <div class="tip" id="tip-box"></div>
+
+  <!-- REFERÊNCIA DE GÊNEROS -->
+  <div class="genre-card" style="margin-top:1.5rem;">
+    <h2>🎵 BPM por Gênero — Clique para carregar</h2>
+    <div class="genre-grid">
+      <div class="genre-item" onclick="loadGenre(this, 128)">
+        <div class="g-name">EDM / Big Room</div>
+        <div class="g-bpm">126 – 132 BPM</div>
+      </div>
+      <div class="genre-item" onclick="loadGenre(this, 124)">
+        <div class="g-name">Deep House</div>
+        <div class="g-bpm">120 – 128 BPM</div>
+      </div>
+      <div class="genre-item" onclick="loadGenre(this, 123)">
+        <div class="g-name">Afro House</div>
+        <div class="g-bpm">118 – 126 BPM</div>
+      </div>
+      <div class="genre-item" onclick="loadGenre(this, 130)">
+        <div class="g-name">Tech House</div>
+        <div class="g-bpm">126 – 134 BPM</div>
+      </div>
+      <div class="genre-item" onclick="loadGenre(this, 140)">
+        <div class="g-name">Trance</div>
+        <div class="g-bpm">136 – 145 BPM</div>
+      </div>
+      <div class="genre-item" onclick="loadGenre(this, 95)">
+        <div class="g-name">Hip-hop</div>
+        <div class="g-bpm">85 – 100 BPM</div>
+      </div>
+      <div class="genre-item" onclick="loadGenre(this, 100)">
+        <div class="g-name">R&B</div>
+        <div class="g-bpm">60 – 80 BPM</div>
+      </div>
+      <div class="genre-item" onclick="loadGenre(this, 126)">
+        <div class="g-name">Eletrônico Comercial</div>
+        <div class="g-bpm">124 – 130 BPM</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="../../dj/estudos/">← Estudos</a>
+    <a href="../camelot/">Tabela Camelot →</a>
+  </div>
+
+</div>
+
+<script>
+  // ── TAP BPM ──────────────────────────────────────────────────────────────
+  let taps = [];
+  let tapTimeout;
+
+  function tap() {
+    const now = Date.now();
+    taps.push(now);
+
+    clearTimeout(tapTimeout);
+    tapTimeout = setTimeout(() => { taps = []; }, 3000);
+
+    if (taps.length < 2) {
+      document.getElementById("tap-hint").textContent = "Continue tocando...";
+      return;
+    }
+
+    const intervals = [];
+    for (let i = 1; i < taps.length; i++) {
+      intervals.push(taps[i] - taps[i-1]);
+    }
+    const avg = intervals.reduce((a,b) => a+b, 0) / intervals.length;
+    const bpm = Math.round(60000 / avg);
+
+    document.getElementById("bpm-input").value = Math.min(200, Math.max(60, bpm));
+    document.getElementById("tap-hint").textContent = `${taps.length} taps — BPM detectado: ${bpm}`;
+    calcular();
+  }
+
+  // ── AJUSTE ───────────────────────────────────────────────────────────────
+  function adjustBpm(delta) {
+    const el = document.getElementById("bpm-input");
+    const val = parseInt(el.value) || 128;
+    el.value = Math.min(200, Math.max(60, val + delta));
+    calcular();
+  }
+
+  // ── CÁLCULO ──────────────────────────────────────────────────────────────
+  function calcular() {
+    const bpm = parseFloat(document.getElementById("bpm-input").value) || 128;
+
+    const ideal_min = Math.round(bpm * 0.94);
+    const ideal_max = Math.round(bpm * 1.06);
+    const ok_min    = Math.round(bpm * 0.88);
+    const ok_max    = Math.round(bpm * 1.12);
+    const duplo     = Math.round(bpm * 2);
+    const half      = Math.round(bpm / 2);
+
+    const zones = [
+      {
+        dot: "z-ideal",
+        label: "✅ Zona ideal",
+        range: `${ideal_min} – ${ideal_max} BPM`,
+        note: "±6% — transição imperceptível"
+      },
+      {
+        dot: "z-ok",
+        label: "⚠️ Aceitável",
+        range: `${ok_min} – ${ok_max} BPM`,
+        note: "±12% — pitch shift visível"
+      },
+      {
+        dot: "z-duplo",
+        label: "🔄 Dobro de tempo",
+        range: `${duplo} BPM`,
+        note: "mesmo groove, dobro da velocidade"
+      },
+      {
+        dot: "z-half",
+        label: "🔄 Metade do tempo",
+        range: `${half} BPM`,
+        note: "mesmo groove, metade da velocidade"
+      }
+    ];
+
+    document.getElementById("zones").innerHTML = zones.map(z => `
+      <div class="zone">
+        <div class="zone-dot ${z.dot}"></div>
+        <div class="zone-label">${z.label}</div>
+        <div class="zone-range">${z.range}</div>
+        <div class="zone-note">${z.note}</div>
+      </div>
+    `).join("");
+
+    // Dica contextual por BPM
+    let tip = "";
+    if (bpm < 90)
+      tip = "<strong>Dica:</strong> BPMs baixos são comuns em hip-hop e R&B. Cuidado ao tentar misturar com house — o groove muda completamente. Use a técnica de <em>half-time</em> para pontes.";
+    else if (bpm < 120)
+      tip = "<strong>Dica:</strong> Faixa versátil. House mais lento e bases latinas vivem aqui. Transições por breaks (pausas naturais) funcionam melhor do que mixagens longas.";
+    else if (bpm < 130)
+      tip = "<strong>Dica:</strong> Zona de Deep e Afro House. As transições harmônicas (Camelot) são ainda mais importantes nesse território — o público sente quando o groove bate.";
+    else if (bpm < 140)
+      tip = "<strong>Dica:</strong> Tech house e eletrônico comercial. Transições longas com EQ swap funcionam muito bem. Manter os graves sob controle é crítico aqui.";
+    else
+      tip = "<strong>Dica:</strong> Território de trance e hardstyle. As transições tendem a ser mais longas e graduais. O pitch correction do software vai trabalhar mais — cheque a latência.";
+
+    document.getElementById("tip-box").innerHTML = tip;
+  }
+
+  // ── GÊNERO ───────────────────────────────────────────────────────────────
+  function loadGenre(el, bpm) {
+    document.querySelectorAll(".genre-item").forEach(g => g.classList.remove("active"));
+    el.classList.add("active");
+    document.getElementById("bpm-input").value = bpm;
+    calcular();
+  }
+
+  // Inicializa
+  calcular();
+</script>
+
+</body>
+</html>
