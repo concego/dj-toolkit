@@ -407,7 +407,7 @@
   <!-- LISTA -->
   <div class="list-card">
     <div class="list-header">
-      <h2>🎵 Setlist (<span id="track-count">0</span> músicas · <span id="total-time">0 min</span>)</h2>
+      <h2>🎵 Setlist (<span id="track-count">0</span> <span id="track-label">músicas</span> · <span id="total-time">0 min</span>)</h2>
       <div class="header-actions">
         <button class="btn-sm" onclick="sortByEnergy()">⚡ Ordenar por energia</button>
         <button class="btn-sm danger" onclick="clearAll()">🗑 Limpar</button>
@@ -521,6 +521,7 @@ function render() {
   const totalTime = tracks.reduce((s, t) => s + (t.duration || 0), 0);
 
   document.getElementById("track-count").textContent = tracks.length;
+  document.getElementById("track-label").textContent = tracks.length === 1 ? "música" : "músicas";
   document.getElementById("total-time").textContent =
     totalTime > 0 ? `${totalTime.toFixed(1)} min` : "0 min";
 
@@ -626,8 +627,8 @@ function renderAnalysis() {
   if (conflitos === 0 && avisos === 0) {
     issues.push({ type:"ok", msg:"Todas as transições estão dentro das zonas seguras. 👏" });
   } else {
-    if (conflitos > 0) issues.push({ type:"err", msg:`${conflitos} transição(ões) com conflito de BPM ou harmonia — revise a ordem.` });
-    if (avisos > 0)   issues.push({ type:"warn", msg:`${avisos} transição(ões) aceitáveis mas com diferença de BPM acima de 6%.` });
+    if (conflitos > 0) issues.push({ type:"err", msg:`${conflitos} ${conflitos === 1 ? "transição com conflito" : "transições com conflito"} de BPM ou harmonia — revise a ordem.` });
+    if (avisos > 0)   issues.push({ type:"warn", msg:`${avisos} ${avisos === 1 ? "transição aceitável" : "transições aceitáveis"} mas com diferença de BPM acima de 6%.` });
   }
 
   // Curva de energia
