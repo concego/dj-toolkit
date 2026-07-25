@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DJ Toolkit — Estudos: Teoria Aplicada</title>
+  <style>
+    :root {
+      --bg: #0e0e14;
+      --surface: #1a1a26;
+      --surface2: #22223a;
+      --accent: #7c3aed;
+      --accent2: #a855f7;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: #2d2d42;
+      --green: #22c55e;
+      --yellow: #eab308;
+      --cyan: #22d3ee;
+      --red: #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.7;
+    }
+
+    /* ── SIDEBAR LAYOUT ── */
+    .layout { display: flex; min-height: 100vh; }
+
+    nav.sidebar {
+      width: 260px;
+      min-width: 260px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 2rem 1.25rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    nav.sidebar .brand {
+      font-size: 1.1rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.25rem;
+    }
+
+    nav.sidebar .sub-brand {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    nav.sidebar ul { list-style: none; }
+    nav.sidebar ul li { margin-bottom: 0.25rem; }
+
+    nav.sidebar ul li a {
+      display: block;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    nav.sidebar ul li a:hover,
+    nav.sidebar ul li a.active {
+      background: var(--surface2);
+      color: var(--accent2);
+    }
+
+    nav.sidebar .nav-section {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin: 1.5rem 0 0.5rem 0.75rem;
+    }
+
+    main {
+      flex: 1;
+      padding: 3rem 2.5rem;
+      max-width: 860px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      margin-bottom: 3rem;
+    }
+
+    .hero .badge {
+      display: inline-block;
+      background: #2d1f4a;
+      color: var(--accent2);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.25rem 0.85rem;
+      border-radius: 99px;
+      margin-bottom: 1rem;
+      border: 1px solid var(--accent);
+    }
+
+    .hero h1 {
+      font-size: 2.2rem;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p { color: var(--muted); font-size: 1.05rem; max-width: 600px; }
+
+    /* ── MÓDULOS ── */
+    .modulo {
+      margin-bottom: 4rem;
+      scroll-margin-top: 2rem;
+    }
+
+    .modulo-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modulo-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .modulo-header h2 {
+      font-size: 1.4rem;
+    }
+
+    .modulo-header p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .card h3 {
+      font-size: 1.05rem;
+      margin-bottom: 0.75rem;
+      color: var(--accent2);
+    }
+
+    .card p, .card li {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .card ul {
+      padding-left: 1.25rem;
+      margin-top: 0.5rem;
+    }
+
+    .card ul li { margin-bottom: 0.4rem; }
+
+    .card ul li strong { color: var(--text); }
+
+    .highlight-box {
+      background: #1e1040;
+      border: 1px solid var(--accent);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-top: 1rem;
+      font-size: 0.88rem;
+      color: var(--text);
+    }
+
+    .highlight-box .hl-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent2);
+      margin-bottom: 0.4rem;
+      font-weight: 700;
+    }
+
+    /* ── BPM TABLE ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.75rem;
+      font-size: 0.88rem;
+    }
+
+    th {
+      background: var(--surface2);
+      color: var(--accent2);
+      text-align: left;
+      padding: 0.6rem 0.9rem;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    td {
+      padding: 0.6rem 0.9rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    td:first-child { color: var(--text); font-weight: 600; }
+
+    tr:last-child td { border-bottom: none; }
+
+    /* ── RODA DE CAVENDISH ── */
+    .cavendish-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .key-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    .key-card .key-num {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent2);
+    }
+
+    .key-card .key-name { color: var(--text); font-weight: 600; }
+    .key-card .key-compat { color: var(--muted); font-size: 0.8rem; margin-top: 0.2rem; }
+
+    /* ── ESTRUTURA DE MÚSICA ── */
+    .timeline {
+      position: relative;
+      margin-top: 1rem;
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      align-items: flex-start;
+    }
+
+    .timeline-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .timeline-content .tl-title { font-weight: 600; font-size: 0.95rem; }
+    .timeline-content .tl-desc  { font-size: 0.83rem; color: var(--muted); margin-top: 0.15rem; }
+    .timeline-content .tl-bars  { font-size: 0.78rem; color: var(--accent2); margin-top: 0.1rem; }
+
+    /* ── LEITURA DE PISTA ── */
+    .signals-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .signal-card {
+      background: var(--surface2);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--border);
+    }
+
+    .signal-card .sig-emoji { font-size: 1.3rem; }
+    .signal-card .sig-title { font-weight: 600; font-size: 0.9rem; margin-top: 0.3rem; }
+    .signal-card .sig-desc  { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* ── MIXAGEM ── */
+    .steps-list { margin-top: 0.75rem; }
+    .step-item {
+      display: flex;
+      gap: 1rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: flex-start;
+    }
+    .step-item:last-child { border-bottom: none; }
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .step-text .st-title { font-weight: 600; font-size: 0.93rem; }
+    .step-text .st-desc  { font-size: 0.82rem; color: var(--muted); margin-top: 0.15rem; }
+
+    /* ── ERROS COMUNS ── */
+    .erros-list { margin-top: 0.75rem; }
+    .erro-item {
+      display: flex;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: flex-start;
+    }
+    .erro-item:last-child { border-bottom: none; }
+    .erro-icon { font-size: 1.2rem; flex-shrink: 0; }
+    .erro-text .et-title { font-weight: 600; font-size: 0.93rem; color: var(--red); }
+    .erro-text .et-fix   { font-size: 0.82rem; color: var(--muted); margin-top: 0.15rem; }
+    .erro-text .et-fix strong { color: var(--green); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 720px) {
+      nav.sidebar { display: none; }
+      main { padding: 2rem 1.25rem; }
+      .cavendish-grid { grid-template-columns: 1fr; }
+      .signals-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="brand">🎧 DJ Toolkit</div>
+    <div class="sub-brand">Estudos — Teoria Aplicada</div>
+
+    <div class="nav-section">Módulos</div>
+    <ul>
+      <li><a href="#bpm">⏱ BPM e Tempo</a></li>
+      <li><a href="#harmonia">🎵 Harmonia & Tons</a></li>
+      <li><a href="#cavendish">🔵 Roda de Cavendish</a></li>
+      <li><a href="#estrutura">📐 Estrutura da Música</a></li>
+      <li><a href="#mixagem">🎚 Fundamentos de Mixagem</a></li>
+      <li><a href="#pista">👁 Leitura de Pista</a></li>
+      <li><a href="#erros">⚠ Erros Comuns</a></li>
+    </ul>
+  </nav>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main>
+
+    <div class="hero">
+      <div class="badge">📚 Teoria Aplicada ao DJing</div>
+      <h1>Entenda <span>o porquê</span> antes do como</h1>
+      <p>Técnica sem teoria é sorte. Aqui você aprende o que está acontecendo na música para tomar decisões conscientes na cabine.</p>
+    </div>
+
+    <!-- ── MÓDULO 1: BPM ── -->
+    <section class="modulo" id="bpm">
+      <div class="modulo-header">
+        <div class="modulo-icon" style="background:#1a1a26; border:1px solid #2d2d42;">⏱</div>
+        <div>
+          <h2>BPM e Tempo</h2>
+          <p>A base de toda transição. Se o tempo não bate, nada funciona.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>O que é BPM?</h3>
+        <p><strong>BPM</strong> (Beats Per Minute) é a velocidade de uma música — quantas batidas por minuto ela tem. É o primeiro número que você precisa saber antes de qualquer transição. Músicas com BPMs incompatíveis soam descoordenadas mesmo que estejam na mesma tonalidade.</p>
+        <div class="highlight-box">
+          <div class="hl-label">Regra prática</div>
+          Transições suaves acontecem entre músicas com diferença de até 3–5 BPM. Diferenças maiores exigem técnica de pitch shift ou remix.
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>BPM por gênero</h3>
+        <table>
+          <thead>
+            <tr><th>Gênero</th><th>Faixa de BPM</th><th>Referência</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Deep House</td><td>120–124 BPM</td><td>Black Coffee, Themba</td></tr>
+            <tr><td>Afro House</td><td>120–125 BPM</td><td>Enoo Napa, Musa Keys</td></tr>
+            <tr><td>House Comercial</td><td>124–128 BPM</td><td>Fisher, Chris Lake</td></tr>
+            <tr><td>Tech House</td><td>126–132 BPM</td><td>John Summit, Skrillex</td></tr>
+            <tr><td>EDM / Big Room</td><td>128–140 BPM</td><td>Martin Garrix, Tiësto</td></tr>
+            <tr><td>Techno</td><td>130–150 BPM</td><td>Charlotte de Witte</td></tr>
+            <tr><td>Hip-hop / Trap</td><td>70–100 BPM</td><td>Travis Scott, Drake</td></tr>
+            <tr><td>R&B / Pop</td><td>60–120 BPM</td><td>Beyoncé, The Weeknd</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3>Sync vs. Beatmatch manual</h3>
+        <p>O botão <strong>Sync</strong> do software alinha o BPM automaticamente. Beatmatch manual é ajustar o pitch na orelha até as batidas coincidirem. Aprenda o manual — o sync falha em músicas com tempo livre (jazz, samba, músicas gravadas ao vivo).</p>
+        <div class="highlight-box">
+          <div class="hl-label">Dica</div>
+          Pratique batendo palma no tempo de músicas enquanto ouve. Isso treina seu ouvido interno de BPM antes de tocar uma controladora.
+        </div>
+      </div>
+    </section>
+
+    <!-- ── MÓDULO 2: HARMONIA ── -->
+    <section class="modulo" id="harmonia">
+      <div class="modulo-header">
+        <div class="modulo-icon" style="background:#1a1a26; border:1px solid #2d2d42;">🎵</div>
+        <div>
+          <h2>Harmonia & Tonalidades</h2>
+          <p>Por que algumas transições soam bonitas e outras parecem erradas.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>O que é tonalidade?</h3>
+        <p>Toda música é composta em uma <strong>tonalidade</strong> (ou "tom") — um conjunto de notas que soam bem juntas. Quando duas músicas em tonalidades compatíveis tocam juntas, o resultado é harmonioso. Quando são incompatíveis, gera tensão ou "falsidade" — o público sente, mesmo sem saber o motivo.</p>
+      </div>
+
+      <div class="card">
+        <h3>Maior vs. Menor</h3>
+        <p>Toda tonalidade existe em duas versões:</p>
+        <ul>
+          <li><strong>Maior:</strong> som mais alegre, eufórico, energético. Ex: hinos de festival, EDM.</li>
+          <li><strong>Menor:</strong> som mais melancólico, profundo, emocional. Ex: deep house, afro house.</li>
+        </ul>
+        <div class="highlight-box">
+          <div class="hl-label">Aplicação prática</div>
+          Deep e afro house vivem predominantemente em tons menores. Quando você mistura uma faixa menor com uma maior sem critério, o set perde a atmosfera.
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Como saber o tom de uma música?</h3>
+        <ul>
+          <li><strong>VirtualDJ e Serato</strong> detectam automaticamente e exibem na biblioteca.</li>
+          <li><strong>Beatport e Traxsource</strong> mostram a tonalidade na página de cada faixa.</li>
+          <li><strong>Mixed In Key</strong> (software separado) é a referência da indústria para análise de tonalidade.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── MÓDULO 3: CAVENDISH ── -->
+    <section class="modulo" id="cavendish">
+      <div class="modulo-header">
+        <div class="modulo-icon" style="background:#1a1a26; border:1px solid #2d2d42;">🔵</div>
+        <div>
+          <h2>Roda de Cavendish</h2>
+          <p>O mapa visual para mixar músicas em harmonia.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>O que é?</h3>
+        <p>A <strong>Roda de Cavendish</strong> (Camelot Wheel) é um sistema criado para simplificar a mixagem harmônica. Cada tonalidade recebe um número (1–12) e uma letra (A para menor, B para maior). Músicas com números iguais ou adjacentes são compatíveis.</p>
+      </div>
+
+      <div class="card">
+        <h3>Regras de compatibilidade</h3>
+        <ul>
+          <li><strong>Mesmo código (ex: 8A → 8A):</strong> Perfeito — mesma tonalidade.</li>
+          <li><strong>Número adjacente (ex: 8A → 9A ou 7A):</strong> Ótimo — tom relativo próximo.</li>
+          <li><strong>Mesma letra, número ±1 (ex: 8A → 8B):</strong> Bom — alterna maior/menor no mesmo tom base.</li>
+          <li><strong>Salto de mais de 2 (ex: 8A → 12B):</strong> Arriscado — use com cuidado ou em breaks.</li>
+        </ul>
+        <div class="highlight-box">
+          <div class="hl-label">Dica prática</div>
+          O Beatport exibe o código Camelot na página de cada faixa. Monte sua biblioteca sempre anotando esse código.
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Referência rápida — tons menores (A)</h3>
+        <div class="cavendish-grid">
+          <div class="key-card"><div class="key-num">1A</div><div class="key-name">Ab menor</div><div class="key-compat">Compatível com: 2A, 12A, 1B</div></div>
+          <div class="key-card"><div class="key-num">2A</div><div class="key-name">Eb menor</div><div class="key-compat">Compatível com: 3A, 1A, 2B</div></div>
+          <div class="key-card"><div class="key-num">3A</div><div class="key-name">Bb menor</div><div class="key-compat">Compatível com: 4A, 2A, 3B</div></div>
+          <div class="key-card"><div class="key-num">4A</div><div class="key-name">F menor</div><div class="key-compat">Compatível com: 5A, 3A, 4B</div></div>
+          <div class="key-card"><div class="key-num">5A</div><div class="key-name">C menor</div><div class="key-compat">Compatível com: 6A, 4A, 5B</div></div>
+          <div class="key-card"><div class="key-num">6A</div><div class="key-name">G menor</div><div class="key-compat">Compatível com: 7A, 5A, 6B</div></div>
+          <div class="key-card"><div class="key-num">7A</div><div class="key-name">D menor</div><div class="key-compat">Compatível com: 8A, 6A, 7B</div></div>
+          <div class="key-card"><div class="key-num">8A</div><div class="key-name">A menor</div><div class="key-compat">Compatível com: 9A, 7A, 8B</div></div>
+          <div class="key-card"><div class="key-num">9A</div><div class="key-name">E menor</div><div class="key-compat">Compatível com: 10A, 8A, 9B</div></div>
+          <div class="key-card"><div class="key-num">10A</div><div class="key-name">B menor</div><div class="key-compat">Compatível com: 11A, 9A, 10B</div></div>
+          <div class="key-card"><div class="key-num">11A</div><div class="key-name">F# menor</div><div class="key-compat">Compatível com: 12A, 10A, 11B</div></div>
+          <div class="key-card"><div class="key-num">12A</div><div class="key-name">Db menor</div><div class="key-compat">Compatível com: 1A, 11A, 12B</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── MÓDULO 4: ESTRUTURA ── -->
+    <section class="modulo" id="estrutura">
+      <div class="modulo-header">
+        <div class="modulo-icon" style="background:#1a1a26; border:1px solid #2d2d42;">📐</div>
+        <div>
+          <h2>Estrutura de uma Música Eletrônica</h2>
+          <p>Saber onde você está na música é saber quando agir.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Anatomia de uma faixa de house</h3>
+        <div class="timeline">
+
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background:#1e3a5f; color:#60a5fa;">IN</div>
+            <div class="timeline-content">
+              <div class="tl-title">Intro</div>
+              <div class="tl-desc">Só percussão e elementos esparsos. Sem elementos principais ainda. Área segura para mixar a música anterior.</div>
+              <div class="tl-bars">Geralmente 16–32 compassos (1–2 minutos)</div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background:#14532d; color:#4ade80;">B1</div>
+            <div class="timeline-content">
+              <div class="tl-title">Breakdown 1 (ou Verse)</div>
+              <div class="tl-desc">Elementos melódicos entram, mas sem a batida completa. Cria tensão e expectativa.</div>
+              <div class="tl-bars">8–16 compassos</div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background:#7c3aed; color:#e9d5ff;">DL</div>
+            <div class="timeline-content">
+              <div class="tl-title">Drop / Clímax</div>
+              <div class="tl-desc">Batida completa entra. É o pico energético. Nunca mude de música aqui — o público está no clímax.</div>
+              <div class="tl-bars">16–32 compassos</div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background:#713f12; color:#fbbf24;">B2</div>
+            <div class="timeline-content">
+              <div class="tl-title">Breakdown 2</div>
+              <div class="tl-desc">A música respira de novo. Outro momento de tensão antes de um segundo drop.</div>
+              <div class="tl-bars">8–16 compassos</div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background:#7f1d1d; color:#fca5a5;">OUT</div>
+            <div class="timeline-content">
+              <div class="tl-title">Outro</div>
+              <div class="tl-desc">Batida ainda ativa, mas elementos vão saindo. Zona ideal para iniciar a próxima mixagem.</div>
+              <div class="tl-bars">16–32 compassos</div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="highlight-box">
+          <div class="hl-label">Regra de ouro</div>
+          Mixe durante a intro da próxima música e o outro da música atual. Nunca troque no drop — a menos que seja um efeito intencional.
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>O que são compassos?</h3>
+        <p>Um <strong>compasso</strong> é um grupo de 4 batidas. Em house, afro e a maioria do eletrônico, as músicas se organizam em blocos de 8 ou 16 compassos. Ouvir esses blocos é a habilidade mais importante do DJ — ela diz quando agir.</p>
+        <div class="highlight-box">
+          <div class="hl-label">Exercício</div>
+          Coloque uma música de house, conte as batidas em grupos de 4. Tente identificar quando um novo bloco de 8 compassos começa — geralmente um novo elemento entra ou sai.
+        </div>
+      </div>
+    </section>
+
+    <!-- ── MÓDULO 5: MIXAGEM ── -->
+    <section class="modulo" id="mixagem">
+      <div class="modulo-header">
+        <div class="modulo-icon" style="background:#1a1a26; border:1px solid #2d2d42;">🎚</div>
+        <div>
+          <h2>Fundamentos de Mixagem</h2>
+          <p>Os três elementos que controlam uma transição.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Os pilares: Volume, EQ e Timing</h3>
+        <div class="steps-list">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-text">
+              <div class="st-title">Volume (Gain & Fader)</div>
+              <div class="st-desc">A música entrante deve começar com o fader fechado. Suba gradualmente até equilibrar com a que está tocando. Nunca deixe dois faders 100% abertos ao mesmo tempo por muito tempo — isso dobra o volume e distorce o som.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-text">
+              <div class="st-title">EQ (Equalizador)</div>
+              <div class="st-desc">O EQ controla graves (low), médios (mid) e agudos (high). Na transição, corte o grave da música entrante enquanto a atual ainda toca — assim você evita colisão de dois graves ao mesmo tempo. Quando o fader da nova estiver aberto, restaure o grave dela e corte da outra.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-text">
+              <div class="st-title">Timing (Fraseo)</div>
+              <div class="st-desc">Iniciar a música entrante no primeiro tempo do compasso certo. Se você errar o timing, as batidas vão colidir mesmo com o BPM sincronizado. Pratique identificar o "1" do compasso antes de abrir o fader.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Tipos de transição</h3>
+        <ul>
+          <li><strong>Crossfade suave:</strong> Lento, de 8 a 32 compassos. Para momentos de menor energia ou público parado.</li>
+          <li><strong>Cut (corte rápido):</strong> Troca instantânea. Usado em hip-hop, open format e momentos de surpresa.</li>
+          <li><strong>Loop de saída:</strong> Você coloca a música atual em loop, dando mais tempo para acertar a entrada da próxima.</li>
+          <li><strong>Echo/Reverb out:</strong> Adiciona efeito na música que sai enquanto a nova entra. Dá um ar de continuidade.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── MÓDULO 6: LEITURA DE PISTA ── -->
+    <section class="modulo" id="pista">
+      <div class="modulo-header">
+        <div class="modulo-icon" style="background:#1a1a26; border:1px solid #2d2d42;">👁</div>
+        <div>
+          <h2>Leitura de Pista</h2>
+          <p>Tocar o que o público precisa, não o que você quer tocar.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Sinais que o público manda</h3>
+        <div class="signals-grid">
+          <div class="signal-card">
+            <div class="sig-emoji">💃</div>
+            <div class="sig-title">Dançando com energia</div>
+            <div class="sig-desc">Mantenha o BPM ou suba levemente. Não quebre o momento.</div>
+          </div>
+          <div class="signal-card">
+            <div class="sig-emoji">🚶</div>
+            <div class="sig-title">Saindo da pista</div>
+            <div class="sig-desc">Música muito pesada, monótona ou fora do contexto. Troque logo.</div>
+          </div>
+          <div class="signal-card">
+            <div class="sig-emoji">🙌</div>
+            <div class="sig-title">Mãos pro alto</div>
+            <div class="sig-desc">Pico do set. É o momento do drop mais forte que você tem.</div>
+          </div>
+          <div class="signal-card">
+            <div class="sig-emoji">📱</div>
+            <div class="sig-title">Filmando a pista</div>
+            <div class="sig-desc">Momento especial — pode ser uma música muito conhecida ou uma virada de energia. Não atrapalhe.</div>
+          </div>
+          <div class="signal-card">
+            <div class="sig-emoji">🗣</div>
+            <div class="sig-title">Pedindo música</div>
+            <div class="sig-desc">Ouça, mas não obedeça automaticamente. Pese se encaixa no momento do set.</div>
+          </div>
+          <div class="signal-card">
+            <div class="sig-emoji">😐</div>
+            <div class="sig-title">Pista vazia ou parada</div>
+            <div class="sig-desc">Risco alto. Toque algo seguro e reconhecível — não é hora de arriscar novidades.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>A curva de energia de um set</h3>
+        <p>Um set profissional tem <strong>arco narrativo</strong>: começa mais suave, constrói energia, atinge o pico no terço final e resolve no encerramento. Não comece no volume máximo — você não tem para onde crescer.</p>
+        <div class="highlight-box">
+          <div class="hl-label">Para o evento de agosto</div>
+          Com prazo curto, monte um set de 60 min com essa estrutura: 15 min de construção, 30 min de pico, 15 min de resolução. Escolha as músicas com antecedência e teste as transições antes do evento.
+        </div>
+      </div>
+    </section>
+
+    <!-- ── MÓDULO 7: ERROS ── -->
+    <section class="modulo" id="erros">
+      <div class="modulo-header">
+        <div class="modulo-icon" style="background:#1a1a26; border:1px solid #2d2d42;">⚠</div>
+        <div>
+          <h2>Erros Comuns de DJ Iniciante</h2>
+          <p>Saber o que não fazer vale tanto quanto saber o que fazer.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="erros-list">
+
+          <div class="erro-item">
+            <div class="erro-icon">🔊</div>
+            <div class="erro-text">
+              <div class="et-title">Dois graves ao mesmo tempo</div>
+              <div class="et-fix">Corte o grave (low EQ) da música entrante antes de abrir o fader. <strong>Solução: swap de graves.</strong></div>
+            </div>
+          </div>
+
+          <div class="erro-item">
+            <div class="erro-icon">⏱</div>
+            <div class="erro-text">
+              <div class="et-title">Entrar no tempo errado do compasso</div>
+              <div class="et-fix">O BPM bate mas o fraseo não — soa descoordenado. <strong>Solução: conte os compassos antes de abrir o fader.</strong></div>
+            </div>
+          </div>
+
+          <div class="erro-item">
+            <div class="erro-icon">🎵</div>
+            <div class="erro-text">
+              <div class="et-title">Mixar em tons incompatíveis</div>
+              <div class="et-fix">As melodias colidem e soam falsas. <strong>Solução: use a Roda de Cavendish para planejar a sequência.</strong></div>
+            </div>
+          </div>
+
+          <div class="erro-item">
+            <div class="erro-icon">📈</div>
+            <div class="erro-text">
+              <div class="et-title">Começar no volume máximo</div>
+              <div class="et-fix">Sem espaço para construir a energia do set. <strong>Solução: defina o pico para o terço final e construa até lá.</strong></div>
+            </div>
+          </div>
+
+          <div class="erro-item">
+            <div class="erro-icon">🔄</div>
+            <div class="erro-text">
+              <div class="et-title">Ficar mexendo demais nos controles</div>
+              <div class="et-fix">DJ nervoso que mexe sem motivo soa amador. <strong>Solução: menos é mais. Aja com intenção, não com ansiedade.</strong></div>
+            </div>
+          </div>
+
+          <div class="erro-item">
+            <div class="erro-icon">🎧</div>
+            <div class="erro-text">
+              <div class="et-title">Não monitorar pelo headphone</div>
+              <div class="et-fix">Você precisa ouvir a próxima música no fone antes de abrir o fader. <strong>Solução: nunca faça transição sem pré-escuta no headphone.</strong></div>
+            </div>
+          </div>
+
+          <div class="erro-item">
+            <div class="erro-icon">📋</div>
+            <div class="erro-text">
+              <div class="et-title">Não preparar a biblioteca antes do evento</div>
+              <div class="et-fix">Ficar procurando música na hora mata o flow. <strong>Solução: monte uma playlist pré-selecionada e organize por BPM e tonalidade.</strong></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // Highlight nav link ativo ao rolar
+  const sections = document.querySelectorAll(".modulo");
+  const navLinks = document.querySelectorAll("nav.sidebar a");
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove("active"));
+        const link = document.querySelector(`nav.sidebar a[href="#${e.target.id}"]`);
+        if (link) link.classList.add("active");
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
