@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DJ Toolkit — Tutoriais Práticos</title>
+  <style>
+    :root {
+      --bg: #0e0e14;
+      --surface: #1a1a26;
+      --surface2: #22223a;
+      --accent: #7c3aed;
+      --accent2: #a855f7;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: #2d2d42;
+      --green: #22c55e;
+      --yellow: #eab308;
+      --cyan: #22d3ee;
+      --red: #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.7;
+    }
+
+    .layout { display: flex; min-height: 100vh; }
+
+    nav.sidebar {
+      width: 260px;
+      min-width: 260px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 2rem 1.25rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    nav.sidebar .brand {
+      font-size: 1.1rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.25rem;
+    }
+
+    nav.sidebar .sub-brand {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    nav.sidebar ul { list-style: none; }
+    nav.sidebar ul li { margin-bottom: 0.25rem; }
+
+    nav.sidebar ul li a {
+      display: block;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    nav.sidebar ul li a:hover,
+    nav.sidebar ul li a.active {
+      background: var(--surface2);
+      color: var(--accent2);
+    }
+
+    nav.sidebar .nav-section {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin: 1.5rem 0 0.5rem 0.75rem;
+    }
+
+    main {
+      flex: 1;
+      padding: 3rem 2.5rem;
+      max-width: 860px;
+    }
+
+    .hero { margin-bottom: 3rem; }
+
+    .hero .badge {
+      display: inline-block;
+      background: #2d1f4a;
+      color: var(--accent2);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.25rem 0.85rem;
+      border-radius: 99px;
+      margin-bottom: 1rem;
+      border: 1px solid var(--accent);
+    }
+
+    .hero h1 {
+      font-size: 2.2rem;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--accent2), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 600px;
+    }
+
+    /* ── MÓDULOS ── */
+    .module {
+      margin-bottom: 4rem;
+      scroll-margin-top: 2rem;
+    }
+
+    .module-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .module-num {
+      width: 2.5rem;
+      height: 2.5rem;
+      min-width: 2.5rem;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .module-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .module-subtitle {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 0.15rem;
+    }
+
+    /* ── STEPS ── */
+    .steps { display: flex; flex-direction: column; gap: 1.25rem; }
+
+    .step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+    }
+
+    .step-icon {
+      font-size: 1.5rem;
+      min-width: 2rem;
+      text-align: center;
+      margin-top: 0.1rem;
+    }
+
+    .step-body h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+
+    .step-body p {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .step-body code {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: 0.1rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      color: var(--cyan);
+      font-family: monospace;
+    }
+
+    /* ── DICA ── */
+    .tip {
+      background: #1a2a1a;
+      border: 1px solid #2d4a2d;
+      border-left: 4px solid var(--green);
+      border-radius: 0 10px 10px 0;
+      padding: 1rem 1.25rem;
+      margin-top: 1.25rem;
+      font-size: 0.92rem;
+      color: #a8d8a8;
+    }
+
+    .tip strong { color: var(--green); }
+
+    .warning {
+      background: #2a1f0e;
+      border: 1px solid #4a3a1a;
+      border-left: 4px solid var(--yellow);
+      border-radius: 0 10px 10px 0;
+      padding: 1rem 1.25rem;
+      margin-top: 1.25rem;
+      font-size: 0.92rem;
+      color: #d8c48a;
+    }
+
+    .warning strong { color: var(--yellow); }
+
+    /* ── COMPARATIVO ── */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.25rem;
+    }
+
+    .compare-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+
+    .compare-card .compare-title {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .compare-card ul {
+      list-style: none;
+      font-size: 0.88rem;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .compare-card ul li::before {
+      content: "→ ";
+      color: var(--accent2);
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 99px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .tag-green { background: #1a3a1a; color: var(--green); border: 1px solid #2d5a2d; }
+    .tag-yellow { background: #3a2a0e; color: var(--yellow); border: 1px solid #5a4a1a; }
+    .tag-cyan { background: #0e2a3a; color: var(--cyan); border: 1px solid #1a4a5a; }
+
+    /* ── LINK FERRAMENTA ── */
+    .tool-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      text-decoration: none;
+      padding: 0.6rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-top: 1.25rem;
+      transition: opacity 0.2s;
+    }
+
+    .tool-link:hover { opacity: 0.85; }
+
+    /* ── CHECKLIST ── */
+    .checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 0.92rem;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+    }
+
+    .check-item:hover { background: var(--surface2); }
+
+    .check-item input[type="checkbox"] {
+      width: 1.1rem;
+      height: 1.1rem;
+      accent-color: var(--accent2);
+      margin-top: 0.15rem;
+      flex-shrink: 0;
+    }
+
+    .check-item.done { opacity: 0.5; }
+    .check-item.done span { text-decoration: line-through; }
+
+    /* ── DIVIDER ── */
+    hr.divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 3rem 0;
+    }
+
+    /* ── BACK ── */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      margin-bottom: 2rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent2); }
+
+    /* ── MOBILE ── */
+    @media (max-width: 700px) {
+      .layout { flex-direction: column; }
+      nav.sidebar { width: 100%; height: auto; position: relative; }
+      main { padding: 1.5rem 1.25rem; }
+      .hero h1 { font-size: 1.6rem; }
+      .compare-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="brand">🎧 DJ Toolkit</div>
+    <div class="sub-brand">Tutoriais Práticos</div>
+
+    <div class="nav-section">Módulos</div>
+    <ul>
+      <li><a href="#mod1" class="active">1 · Primeiro Setup</a></li>
+      <li><a href="#mod2">2 · Descobrir BPM e Tom</a></li>
+      <li><a href="#mod3">3 · Beatmatch Manual</a></li>
+      <li><a href="#mod4">4 · Seu Primeiro Set</a></li>
+    </ul>
+
+    <div class="nav-section">Ferramentas</div>
+    <ul>
+      <li><a href="../ferramentas/bpm/">⏱ Calculadora de BPM</a></li>
+      <li><a href="../ferramentas/camelot/">🔵 Tabela Camelot</a></li>
+      <li><a href="../ferramentas/setlist/">📋 Montador de Setlist</a></li>
+      <li><a href="../ferramentas/cronometro/">🕐 Cronômetro de Set</a></li>
+    </ul>
+
+    <div class="nav-section">Mais</div>
+    <ul>
+      <li><a href="../estudos/">📖 Teoria Aplicada</a></li>
+      <li><a href="../setups/">🛒 Monte seu Setup</a></li>
+      <li><a href="../../">← Hub Central</a></li>
+    </ul>
+  </nav>
+
+  <!-- CONTEÚDO -->
+  <main>
+    <a href="../../" class="back-link">← DJ Toolkit</a>
+
+    <div class="hero">
+      <div class="badge">Tutoriais</div>
+      <h1>Do zero ao <span>primeiro set</span></h1>
+      <p>Quatro módulos práticos para sair da teoria e tocar de verdade — com as ferramentas do toolkit integradas em cada etapa.</p>
+    </div>
+
+    <!-- ─────────────────────────────────────────── -->
+    <!-- MÓDULO 1 — PRIMEIRO SETUP                   -->
+    <!-- ─────────────────────────────────────────── -->
+    <section class="module" id="mod1">
+      <div class="module-header">
+        <div class="module-num">1</div>
+        <div>
+          <div class="module-title">Primeiro Setup no VirtualDJ</div>
+          <div class="module-subtitle">Instalar, configurar e entender a tela antes de tocar a primeira música</div>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-icon">⬇️</div>
+          <div class="step-body">
+            <h3>Baixar o VirtualDJ Home (gratuito)</h3>
+            <p>Acesse <code>virtualdj.com</code> e baixe a versão <strong>Home</strong>. É 100% gratuita para uso em casa — só fica limitada quando você conectar um controlador externo sem licença. Para aprender, serve perfeitamente.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-icon">🖥️</div>
+          <div class="step-body">
+            <h3>Entendendo a tela principal</h3>
+            <p>O VirtualDJ é dividido em <strong>dois decks</strong> (esquerdo e direito) com um mixer no meio. O deck esquerdo é a música que está tocando. O deck direito é a próxima. Você usa o mixer para ir trocando o volume de um para o outro — isso é a transição.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-icon">📁</div>
+          <div class="step-body">
+            <h3>Adicionar sua música</h3>
+            <p>No painel inferior direito, clique em <code>Pastas</code> e navegue até onde estão seus arquivos MP3. Arraste uma música para o deck esquerdo. Pressione <code>Play</code> — ela começa a tocar. Arraste outra para o deck direito e deixe pausada.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-icon">🔊</div>
+          <div class="step-body">
+            <h3>Configurar a saída de áudio</h3>
+            <p>Vá em <code>Configurações → Áudio</code>. Se estiver usando fone e caixa separados: master output vai para a caixa, headphones output vai para o fone. Se tiver só um dispositivo, use a saída padrão — tudo sairá pelo mesmo lugar.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip">
+        <strong>💡 Dica:</strong> Não tente aprender tudo de uma vez. Na primeira sessão, o objetivo é só conseguir tocar uma música do começo ao fim sem travar. Configuração, interface, atalhos — isso vem depois.
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- ─────────────────────────────────────────── -->
+    <!-- MÓDULO 2 — DESCOBRIR BPM E TOM              -->
+    <!-- ─────────────────────────────────────────── -->
+    <section class="module" id="mod2">
+      <div class="module-header">
+        <div class="module-num">2</div>
+        <div>
+          <div class="module-title">Como Descobrir o BPM e Tom de Qualquer Música</div>
+          <div class="module-subtitle">Ferramentas para extrair os dados que você precisa — sem depender de listas prontas</div>
+        </div>
+      </div>
+
+      <p style="color: var(--muted); margin-bottom: 1.5rem;">Você não precisa de uma "biblioteca de músicas certas". Você precisa saber <strong>como descobrir</strong> o BPM e o tom de qualquer música que queira tocar. Isso te dá autonomia total para montar seus próprios sets.</p>
+
+      <div class="compare-grid">
+        <div class="compare-card">
+          <div class="compare-title">
+            🟢 Beatport
+            <span class="tag tag-green">Recomendado</span>
+          </div>
+          <ul>
+            <li>Mostra BPM e Camelot na página da faixa</li>
+            <li>Filtra por gênero, BPM e tom</li>
+            <li>Grátis para consultar, pago para baixar</li>
+            <li>Vai direto em <code>beatport.com</code></li>
+          </ul>
+        </div>
+
+        <div class="compare-card">
+          <div class="compare-title">
+            🟣 Rekordbox
+            <span class="tag tag-cyan">Grátis</span>
+          </div>
+          <ul>
+            <li>Analisa sua biblioteca inteira automaticamente</li>
+            <li>Detecta BPM e tom com precisão alta</li>
+            <li>Arraste a pasta de músicas e aguarde</li>
+            <li>Exporta para pen drive se usar CDJs</li>
+          </ul>
+        </div>
+
+        <div class="compare-card">
+          <div class="compare-title">
+            🔵 Tunebat
+            <span class="tag tag-cyan">Online</span>
+          </div>
+          <ul>
+            <li>Site gratuito, sem instalar nada</li>
+            <li>Busca por nome da música ou artista</li>
+            <li>Retorna BPM e tom em segundos</li>
+            <li><code>tunebat.com</code></li>
+          </ul>
+        </div>
+
+        <div class="compare-card">
+          <div class="compare-title">
+            ⚡ VirtualDJ
+            <span class="tag tag-yellow">Já tem</span>
+          </div>
+          <ul>
+            <li>Analisa automaticamente ao carregar a música</li>
+            <li>Mostra BPM no deck em tempo real</li>
+            <li>Tom exige ativar análise nas configurações</li>
+            <li>Mais rápido se já estiver no app</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="steps" style="margin-top: 1.5rem;">
+        <div class="step">
+          <div class="step-icon">🎯</div>
+          <div class="step-body">
+            <h3>Fluxo recomendado para iniciantes</h3>
+            <p>1. Escolha uma música que quer tocar.<br>
+               2. Busque no <strong>Tunebat</strong> — anote BPM e tom.<br>
+               3. Converta o tom para Camelot usando a <strong>Tabela Camelot</strong> do toolkit (se o Tunebat retornar na notação musical clássica, ex: "A minor" = 8A).<br>
+               4. Adicione a faixa no <strong>Montador de Setlist</strong> com os dados que você acabou de descobrir.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-icon">🗺️</div>
+          <div class="step-body">
+            <h3>Tabela de conversão rápida (tom clássico → Camelot)</h3>
+            <p>Se a ferramenta retornar o tom no formato clássico (ex: "C major", "A minor"), use esta referência básica:</p>
+            <p style="margin-top:0.75rem;">
+              <code>C maj = 8B</code> · <code>A min = 8A</code> · <code>G maj = 9B</code> · <code>E min = 9A</code> ·
+              <code>D maj = 10B</code> · <code>B min = 10A</code> · <code>F maj = 7B</code> · <code>D min = 7A</code>
+            </p>
+            <p style="margin-top:0.5rem; color: var(--muted); font-size:0.85rem;">A Tabela Camelot completa do toolkit cobre todos os tons.</p>
+          </div>
+        </div>
+      </div>
+
+      <a href="../ferramentas/camelot/" class="tool-link">🔵 Abrir Tabela Camelot</a>
+      <a href="../ferramentas/setlist/" class="tool-link" style="margin-left: 0.75rem;">📋 Abrir Montador de Setlist</a>
+
+      <div class="warning" style="margin-top: 1.5rem;">
+        <strong>⚠️ Atenção:</strong> O BPM detectado por ferramentas automáticas pode ter pequeno erro. Ao mixar, sempre confie no que você ouve — não no número na tela. O número é um ponto de partida, não uma verdade absoluta.
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- ─────────────────────────────────────────── -->
+    <!-- MÓDULO 3 — BEATMATCH MANUAL                 -->
+    <!-- ─────────────────────────────────────────── -->
+    <section class="module" id="mod3">
+      <div class="module-header">
+        <div class="module-num">3</div>
+        <div>
+          <div class="module-title">Beatmatch Manual</div>
+          <div class="module-subtitle">Sincronizar dois BPMs sem apertar o botão Sync — a habilidade fundamental do DJ</div>
+        </div>
+      </div>
+
+      <p style="color: var(--muted); margin-bottom: 1.5rem;">O botão <strong>Sync</strong> existe e funciona. Mas entender o beatmatch manual te diz <em>por que</em> as coisas funcionam — e te salva quando o sync desalinha ou quando você usa equipamento que não tem essa função.</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-icon">👂</div>
+          <div class="step-body">
+            <h3>Passo 1 — Ouça os dois beats ao mesmo tempo</h3>
+            <p>Coloque o fone em um ouvido e ouça o deck A pelo fone. O deck B está tocando na caixa. Seu trabalho é fazer com que os dois bumbo (kick) batam juntos — sem eco, sem "pá-pum", só "pum" limpo.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-icon">🎚️</div>
+          <div class="step-body">
+            <h3>Passo 2 — Ajuste o pitch (velocidade)</h3>
+            <p>O slider de pitch (ou <code>+</code> / <code>−</code> no VirtualDJ) acelera ou freia a música. Se o deck B está atrasando em relação ao A, aumente o pitch levemente. Se está adiantando, diminua. Faça ajustes pequenos — grandes variações de BPM distorcem o áudio.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-icon">🖐️</div>
+          <div class="step-body">
+            <h3>Passo 3 — Jog wheel para ajuste fino</h3>
+            <p>Mesmo com BPMs iguais, as músicas podem estar fora de fase — os beats não coincidem. Use a jog wheel (ou arraste a forma de onda no VirtualDJ) para empurrar a música levemente para frente ou para trás até o beat encaixar. Isso se chama <strong>phase matching</strong>.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-icon">🔁</div>
+          <div class="step-body">
+            <h3>Passo 4 — Monitore e corrija durante a transição</h3>
+            <p>Beats se desalinham naturalmente com o tempo. Durante uma transição longa, fique monitorando e fazendo micro-correções no pitch. Isso é normal — até os melhores DJs fazem isso o tempo todo.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip">
+        <strong>💡 Dica:</strong> Comece praticando com duas músicas do mesmo gênero e BPM parecido (diferença de no máximo 4 BPM). A <strong>Calculadora de BPM</strong> do toolkit mostra exatamente qual é a faixa segura de transição para qualquer música.
+      </div>
+
+      <a href="../ferramentas/bpm/" class="tool-link">⏱ Ver faixas de transição seguras</a>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- ─────────────────────────────────────────── -->
+    <!-- MÓDULO 4 — PRIMEIRO SET                     -->
+    <!-- ─────────────────────────────────────────── -->
+    <section class="module" id="mod4">
+      <div class="module-header">
+        <div class="module-num">4</div>
+        <div>
+          <div class="module-title">Preparando o Seu Primeiro Set</div>
+          <div class="module-subtitle">Da escolha das músicas ao checklist do dia do evento</div>
+        </div>
+      </div>
+
+      <p style="color: var(--muted); margin-bottom: 1.5rem;">Um set bem preparado é mais tranquilo de tocar do que um set improvisado — mesmo que a plateia nunca perceba a diferença. Este módulo fecha o ciclo das ferramentas do toolkit.</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-icon">🎵</div>
+          <div class="step-body">
+            <h3>Monte o setlist com antecedência</h3>
+            <p>Use o <strong>Módulo 2</strong> para levantar BPM e tom de cada música. Adicione tudo no <strong>Montador de Setlist</strong> e deixe a ferramenta apontar os conflitos de harmonia e BPM antes do dia do evento — não durante.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-icon">📈</div>
+          <div class="step-body">
+            <h3>Pense na curva de energia</h3>
+            <p>Um bom set tem três fases: <strong>abertura</strong> (energia média, apresentar o estilo), <strong>pico</strong> (o momento mais intenso) e <strong>fechamento</strong> (descida gradual). Não precisa ser rígido — mas ter esse arco em mente muda completamente como o público sente o set.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-icon">⏱️</div>
+          <div class="step-body">
+            <h3>Simule o set antes do evento</h3>
+            <p>Configure o <strong>Cronômetro de Set</strong> com a duração total e as fases que você planejou. Toque o set completo em casa pelo menos uma vez do começo ao fim — incluindo as transições. Isso reduz surpresas no dia.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-icon">🔊</div>
+          <div class="step-body">
+            <h3>Leve músicas a mais</h3>
+            <p>Monte o dobro do que você precisa. Se o set for de 1 hora (≈ 10 músicas de 6 min), tenha 20 preparadas. Às vezes uma música não funciona no momento, o público reage diferente, ou você precisa estender o set. Flexibilidade é profissionalismo.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 2rem;">
+        <div style="font-size: 1rem; font-weight: 700; margin-bottom: 1rem;">✅ Checklist do dia do evento</div>
+        <div class="checklist" id="checklist">
+          <label class="check-item"><input type="checkbox" /> <span>Setlist montado e revisado no Montador de Setlist</span></label>
+          <label class="check-item"><input type="checkbox" /> <span>Músicas salvas localmente (não depender de Wi-Fi)</span></label>
+          <label class="check-item"><input type="checkbox" /> <span>Playlist carregada e organizada no VirtualDJ</span></label>
+          <label class="check-item"><input type="checkbox" /> <span>Teste de áudio feito com a saída correta</span></label>
+          <label class="check-item"><input type="checkbox" /> <span>Cronômetro configurado com a duração do set</span></label>
+          <label class="check-item"><input type="checkbox" /> <span>Músicas extras separadas (pelo menos o dobro do necessário)</span></label>
+          <label class="check-item"><input type="checkbox" /> <span>Fone de ouvido para monitoramento carregado/com fio</span></label>
+          <label class="check-item"><input type="checkbox" /> <span>Notebook carregado e carregador na bolsa</span></label>
+        </div>
+      </div>
+
+      <div class="tip" style="margin-top: 1.5rem;">
+        <strong>💡 Lembre:</strong> Ninguém na pista sabe qual era o plano original. Se uma transição não ficou perfeita, continue — a maioria das pessoas não percebe. O que elas percebem é se a música parou ou se o clima caiu. Mantenha o groove e o resto é detalhe.
+      </div>
+
+      <a href="../ferramentas/setlist/" class="tool-link">📋 Montar meu Setlist</a>
+      <a href="../ferramentas/cronometro/" class="tool-link" style="margin-left: 0.75rem;">🕐 Configurar Cronômetro</a>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // Sidebar active link on scroll
+  const sections = document.querySelectorAll(".module");
+  const navLinks = document.querySelectorAll("nav.sidebar a[href^='#']");
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove("active"));
+        const active = document.querySelector(`nav.sidebar a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add("active");
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(s => observer.observe(s));
+
+  // Checklist persistência
+  const checkItems = document.querySelectorAll(".check-item input[type='checkbox']");
+  checkItems.forEach((cb, i) => {
+    cb.checked = localStorage.getItem(`check-${i}`) === "1";
+    cb.closest(".check-item").classList.toggle("done", cb.checked);
+    cb.addEventListener("change", () => {
+      localStorage.setItem(`check-${i}`, cb.checked ? "1" : "0");
+      cb.closest(".check-item").classList.toggle("done", cb.checked);
+    });
+  });
+</script>
+
+</body>
+</html>
